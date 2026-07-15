@@ -1,0 +1,1804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PawKeeper Pro — Luxury Pet Care</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=DM+Sans:wght@300;400;500;600&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #1a1108;
+  --ink2: #2d1f0e;
+  --parch: #f9f3e8;
+  --parch2: #f2e8d4;
+  --gold: #c49a3c;
+  --gold2: #e8b84b;
+  --gold3: #f5d98a;
+  --amber: #d4780a;
+  --sage: #4a7c5f;
+  --sage2: #6aad84;
+  --rose: #c4685a;
+  --rose2: #e88a7a;
+  --sky: #4a7fa8;
+  --lav: #7a68a8;
+  --cream: #fdf8f0;
+  --white: #fffdf8;
+  --border: rgba(196,154,60,0.25);
+  --border2: rgba(196,154,60,0.12);
+  --shadow: rgba(26,17,8,0.18);
+  --shadow2: rgba(26,17,8,0.08);
+  --glass: rgba(249,243,232,0.85);
+  --sidebar-w: 260px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--parch);font-family:'DM Sans',sans-serif;color:var(--ink);min-height:100vh;display:flex;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse at 0% 0%,rgba(196,154,60,0.08) 0%,transparent 50%),
+    radial-gradient(ellipse at 100% 100%,rgba(74,124,95,0.07) 0%,transparent 50%),
+    radial-gradient(ellipse at 100% 0%,rgba(196,104,90,0.05) 0%,transparent 40%);
+}
+
+/* ── GRAIN OVERLAY ── */
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.025;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:200px;
+}
+
+/* ════════════════════════
+   SIDEBAR
+════════════════════════ */
+.sidebar{
+  width:var(--sidebar-w);min-width:var(--sidebar-w);
+  background:var(--ink2);
+  position:fixed;top:0;left:0;bottom:0;
+  display:flex;flex-direction:column;
+  z-index:50;
+  box-shadow:4px 0 30px rgba(0,0,0,0.3);
+  transition:transform 0.35s cubic-bezier(.4,0,.2,1);
+}
+.sidebar-header{padding:28px 24px 20px;border-bottom:1px solid rgba(255,255,255,0.08);}
+.sidebar-logo{font-family:'Cinzel',serif;font-size:20px;color:var(--gold2);letter-spacing:2px;display:flex;align-items:center;gap:10px;}
+.sidebar-logo-icon{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--gold),var(--amber));display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.sidebar-tagline{font-size:10px;color:rgba(255,255,255,0.35);letter-spacing:2px;text-transform:uppercase;margin-top:4px;}
+
+.sidebar-pet-switcher{padding:16px 16px 12px;}
+.sidebar-pet-label{font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:10px;padding:0 8px;}
+.sidebar-pet-list{display:flex;flex-direction:column;gap:4px;}
+.sidebar-pet-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:10px;cursor:pointer;transition:all 0.2s;position:relative;}
+.sidebar-pet-item:hover{background:rgba(255,255,255,0.06);}
+.sidebar-pet-item.active{background:rgba(196,154,60,0.15);border:1px solid rgba(196,154,60,0.2);}
+.sidebar-pet-avatar{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.sidebar-pet-name{font-size:13px;font-weight:500;color:rgba(255,255,255,0.85);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sidebar-pet-species{font-size:10px;color:rgba(255,255,255,0.35);margin-top:1px;}
+.sidebar-pet-del{width:20px;height:20px;border-radius:50%;background:rgba(196,104,90,0.15);border:1px solid rgba(196,104,90,0.2);color:var(--rose2);font-size:9px;cursor:pointer;display:none;align-items:center;justify-content:center;font-family:'DM Sans',sans-serif;flex-shrink:0;}
+.sidebar-pet-item:hover .sidebar-pet-del{display:flex;}
+.sidebar-pet-del:hover{background:rgba(196,104,90,0.35);}
+.sidebar-add-pet{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;border:1px dashed rgba(196,154,60,0.3);color:rgba(255,255,255,0.4);font-size:12px;cursor:pointer;margin:6px 0 0;transition:all 0.2s;font-family:'DM Sans',sans-serif;background:transparent;width:100%;}
+.sidebar-add-pet:hover{border-color:var(--gold);color:var(--gold2);background:rgba(196,154,60,0.06);}
+
+.sidebar-nav{flex:1;padding:8px 16px;overflow-y:auto;}
+.nav-section-label{font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.25);padding:14px 8px 6px;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:10px;cursor:pointer;transition:all 0.2s;color:rgba(255,255,255,0.55);font-size:13px;font-weight:400;border:1px solid transparent;margin-bottom:2px;}
+.nav-item:hover{background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.85);}
+.nav-item.active{background:rgba(196,154,60,0.12);color:var(--gold3);border-color:rgba(196,154,60,0.15);}
+.nav-icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;background:rgba(255,255,255,0.05);}
+.nav-item.active .nav-icon{background:rgba(196,154,60,0.2);}
+.nav-badge{margin-left:auto;background:var(--rose);color:#fff;font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;}
+
+.sidebar-footer{padding:16px;border-top:1px solid rgba(255,255,255,0.07);}
+.sidebar-user{display:flex;align-items:center;gap:10px;}
+.sidebar-user-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--amber));display:flex;align-items:center;justify-content:center;font-size:16px;}
+.sidebar-user-name{font-size:13px;color:rgba(255,255,255,0.7);font-weight:500;}
+.sidebar-user-plan{font-size:10px;color:var(--gold);letter-spacing:0.5px;}
+
+/* ════════════════════════
+   MAIN CONTENT
+════════════════════════ */
+.main{margin-left:var(--sidebar-w);flex:1;min-height:100vh;position:relative;z-index:1;}
+
+.topbar{
+  position:sticky;top:0;z-index:40;
+  background:var(--glass);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border2);
+  padding:0 32px;height:64px;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+}
+.topbar-title{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;color:var(--ink);}
+.topbar-title span{color:var(--gold);font-style:italic;}
+.topbar-right{display:flex;align-items:center;gap:12px;}
+.topbar-btn{padding:8px 18px;border-radius:50px;font-size:12px;font-weight:600;letter-spacing:0.5px;cursor:pointer;transition:all 0.2s;font-family:'DM Sans',sans-serif;border:1.5px solid var(--border);}
+.topbar-btn.primary{background:linear-gradient(135deg,var(--gold),var(--amber));color:#fff;border-color:transparent;box-shadow:0 4px 16px rgba(196,154,60,0.3);}
+.topbar-btn.primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(196,154,60,0.4);}
+.topbar-btn.ghost{background:transparent;color:var(--ink2);}
+.topbar-btn.ghost:hover{background:var(--parch2);}
+.burger{display:none;background:none;border:none;cursor:pointer;font-size:20px;color:var(--ink);}
+
+.content{padding:28px 32px 80px;}
+
+/* ════════════════════════
+   PANELS
+════════════════════════ */
+.panel{display:none;animation:panelIn 0.4s ease both;}
+.panel.active{display:block;}
+@keyframes panelIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* ════════════════════════
+   DASHBOARD
+════════════════════════ */
+.dash-hero{
+  background:linear-gradient(135deg,var(--ink2) 0%,#3d2c18 60%,#2a1f10 100%);
+  border-radius:20px;padding:32px 36px;margin-bottom:28px;
+  display:flex;align-items:center;justify-content:space-between;gap:20px;
+  box-shadow:0 8px 40px rgba(0,0,0,0.2);position:relative;overflow:hidden;
+}
+.dash-hero::before{content:'🐾';position:absolute;right:28px;top:50%;transform:translateY(-50%);font-size:120px;opacity:0.04;}
+.dash-hero-text h2{font-family:'Cormorant Garamond',serif;font-size:32px;color:#fff;font-weight:600;line-height:1.2;}
+.dash-hero-text h2 em{color:var(--gold2);font-style:italic;}
+.dash-hero-text p{color:rgba(255,255,255,0.5);font-size:14px;margin-top:6px;}
+.dash-hero-stats{display:flex;gap:24px;flex-shrink:0;}
+.hero-stat{text-align:center;}
+.hero-stat-num{font-family:'Cinzel',serif;font-size:28px;color:var(--gold2);line-height:1;}
+.hero-stat-label{font-size:10px;color:rgba(255,255,255,0.4);letter-spacing:1.5px;text-transform:uppercase;margin-top:3px;}
+
+.dash-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:24px;}
+.kpi-card{background:var(--white);border:1px solid var(--border2);border-radius:16px;padding:20px;transition:all 0.25s;cursor:default;}
+.kpi-card:hover{transform:translateY(-3px);box-shadow:0 12px 32px var(--shadow2);border-color:var(--border);}
+.kpi-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:12px;}
+.kpi-val{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:700;color:var(--ink);line-height:1;}
+.kpi-label{font-size:12px;color:#8a7a68;margin-top:3px;}
+.kpi-delta{font-size:11px;margin-top:8px;font-weight:600;}
+.kpi-delta.up{color:var(--sage);}
+.kpi-delta.warn{color:var(--amber);}
+
+.dash-two{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:24px;}
+.dash-three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;margin-bottom:24px;}
+
+/* ════════════════════════
+   CARD SYSTEM
+════════════════════════ */
+.card{background:var(--white);border:1px solid var(--border2);border-radius:18px;padding:24px;box-shadow:0 2px 12px var(--shadow2);}
+.card:hover{box-shadow:0 4px 20px var(--shadow2);}
+.card-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;gap:12px;}
+.card-hd-left{display:flex;align-items:center;gap:10px;}
+.card-hd-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.card-hd-title{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:600;color:var(--ink);}
+.card-hd-sub{font-size:11px;color:#8a7a68;margin-top:2px;}
+.card-hd-actions{display:flex;gap:8px;}
+
+/* ════════════════════════
+   FORMS & INPUTS
+════════════════════════ */
+.field{margin-bottom:0;}
+.field label{display:block;font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#8a7a68;margin-bottom:5px;}
+.field input,.field select,.field textarea{
+  width:100%;padding:9px 12px;
+  border:1.5px solid var(--border);border-radius:10px;
+  font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink);
+  background:var(--parch);outline:none;transition:all 0.2s;
+}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(196,154,60,0.12);background:var(--white);}
+.field textarea{resize:vertical;min-height:60px;}
+.frow{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:10px;}
+
+/* ════════════════════════
+   BUTTONS
+════════════════════════ */
+.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 20px;border:none;border-radius:50px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.2s;letter-spacing:0.3px;}
+.btn-gold{background:linear-gradient(135deg,var(--gold),var(--amber));color:#fff;box-shadow:0 4px 14px rgba(196,154,60,0.3);}
+.btn-gold:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(196,154,60,0.4);}
+.btn-sage{background:linear-gradient(135deg,var(--sage),#2d6b47);color:#fff;box-shadow:0 4px 12px rgba(74,124,95,0.3);}
+.btn-sage:hover{transform:translateY(-1px);}
+.btn-rose{background:linear-gradient(135deg,var(--rose),#a84f43);color:#fff;box-shadow:0 4px 12px rgba(196,104,90,0.3);}
+.btn-rose:hover{transform:translateY(-1px);}
+.btn-sky{background:linear-gradient(135deg,var(--sky),#2d5f8a);color:#fff;box-shadow:0 4px 12px rgba(74,127,168,0.3);}
+.btn-sky:hover{transform:translateY(-1px);}
+.btn-ghost{background:transparent;border:1.5px solid var(--border);color:#8a7a68;}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold);}
+.btn-sm{padding:6px 14px;font-size:11px;}
+.btn-xs{padding:4px 10px;font-size:10px;border-radius:8px;border:1px solid var(--border);background:transparent;color:#8a7a68;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;}
+.btn-xs:hover{background:var(--rose2);color:#fff;border-color:transparent;}
+
+/* ════════════════════════
+   TABLE / LIST ITEMS
+════════════════════════ */
+.list-item{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:12px;border:1px solid var(--border2);background:var(--parch);margin-bottom:8px;transition:all 0.2s;animation:itemIn 0.3s ease both;}
+.list-item:hover{border-color:var(--border);background:var(--white);}
+@keyframes itemIn{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:translateX(0)}}
+.item-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.item-main{flex:1;min-width:0;}
+.item-title{font-size:13px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.item-sub{font-size:11px;color:#8a7a68;margin-top:2px;}
+.item-right{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+
+/* BADGES */
+.badge{padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:0.5px;display:inline-block;}
+.badge-gold{background:rgba(196,154,60,0.15);color:var(--amber);}
+.badge-sage{background:rgba(74,124,95,0.15);color:var(--sage);}
+.badge-rose{background:rgba(196,104,90,0.12);color:var(--rose);}
+.badge-sky{background:rgba(74,127,168,0.15);color:var(--sky);}
+.badge-lav{background:rgba(122,104,168,0.15);color:var(--lav);}
+.badge-ink{background:rgba(26,17,8,0.08);color:var(--ink2);}
+
+/* PROGRESS */
+.prog-wrap{margin-top:6px;}
+.prog-row{display:flex;justify-content:space-between;font-size:11px;color:#8a7a68;margin-bottom:4px;}
+.prog-track{height:6px;background:var(--parch2);border-radius:20px;overflow:hidden;}
+.prog-fill{height:100%;border-radius:20px;transition:width 1.2s cubic-bezier(.4,0,.2,1);}
+
+/* EMPTY */
+.empty{text-align:center;padding:32px 20px;color:#9a8a78;}
+.empty-icon{font-size:48px;margin-bottom:10px;display:block;opacity:0.4;}
+.empty-text{font-size:13px;font-style:italic;}
+
+/* STATUS DOTS */
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex-shrink:0;}
+.dot-gold{background:var(--gold);}
+.dot-sage{background:var(--sage);}
+.dot-rose{background:var(--rose);}
+.dot-sky{background:var(--sky);}
+
+/* SECTION DIVIDER */
+.sect{margin:28px 0 16px;display:flex;align-items:center;gap:12px;}
+.sect h3{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--ink);white-space:nowrap;}
+.sect::after{content:'';flex:1;height:1px;background:linear-gradient(to right,var(--border),transparent);}
+
+/* ════════════════════════
+   MODAL
+════════════════════════ */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(10,6,2,0.6);z-index:200;align-items:center;justify-content:center;backdrop-filter:blur(6px);}
+.modal-bg.open{display:flex;}
+.modal-box{background:var(--white);border-radius:20px;padding:30px 32px;width:460px;max-width:95vw;max-height:90vh;overflow-y:auto;box-shadow:0 24px 80px rgba(0,0,0,0.3);animation:panelIn 0.3s ease;border:1px solid var(--border);}
+.modal-box h3{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:700;color:var(--ink);margin-bottom:20px;}
+.modal-close{position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:50%;border:none;background:var(--parch2);cursor:pointer;font-size:14px;color:#8a7a68;display:flex;align-items:center;justify-content:center;}
+.modal-close:hover{background:var(--rose2);color:#fff;}
+
+/* PET EMOJI PICKER */
+.epick{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;}
+.epick-btn{width:38px;height:38px;border-radius:9px;border:1.5px solid var(--border);background:var(--parch);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;}
+.epick-btn:hover{border-color:var(--gold2);transform:scale(1.1);}
+.epick-btn.sel{border-color:var(--gold);background:rgba(196,154,60,0.1);box-shadow:0 0 0 3px rgba(196,154,60,0.12);}
+
+/* COLOR PICKER */
+.cpick{display:flex;gap:7px;flex-wrap:wrap;margin-top:6px;}
+.cpick-swatch{width:28px;height:28px;border-radius:7px;cursor:pointer;transition:all 0.15s;border:2px solid transparent;}
+.cpick-swatch:hover{transform:scale(1.15);}
+.cpick-swatch.sel{border-color:var(--ink2);box-shadow:0 0 0 3px rgba(26,17,8,0.12);}
+
+/* ════════════════════════
+   SCHEDULE / CALENDAR
+════════════════════════ */
+.sched-list{display:flex;flex-direction:column;gap:8px;}
+.sched-item{display:flex;gap:14px;padding:13px 16px;border-radius:12px;background:var(--parch);border:1px solid var(--border2);transition:all 0.2s;}
+.sched-item:hover{border-color:var(--border);background:var(--white);}
+.sched-date-box{width:48px;min-width:48px;height:48px;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10px;letter-spacing:1px;text-transform:uppercase;}
+.sched-day{font-family:'Cinzel',serif;font-size:20px;font-weight:600;line-height:1;}
+.sched-title{font-size:13px;font-weight:600;color:var(--ink);}
+.sched-sub{font-size:11px;color:#8a7a68;margin-top:2px;}
+.sched-type{font-size:18px;}
+
+/* ════════════════════════
+   WEIGHT CHART
+════════════════════════ */
+.chart-wrap{height:140px;margin:8px 0 14px;position:relative;}
+.chart-svg{width:100%;height:100%;overflow:visible;}
+
+/* ════════════════════════
+   GROOMING CARDS
+════════════════════════ */
+.groom-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;}
+.groom-card{padding:16px 12px;border-radius:14px;text-align:center;background:var(--parch);border:1.5px solid var(--border2);transition:all 0.25s;position:relative;cursor:pointer;}
+.groom-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px var(--shadow2);border-color:var(--border);}
+.groom-em{font-size:26px;display:block;margin-bottom:6px;}
+.groom-name{font-size:12px;font-weight:600;color:var(--ink);}
+.groom-freq{font-size:10px;color:#8a7a68;margin-top:2px;}
+.groom-due{margin-top:7px;padding:2px 9px;border-radius:20px;font-size:10px;font-weight:700;display:inline-block;cursor:pointer;}
+.groom-del{position:absolute;top:7px;right:7px;width:20px;height:20px;border-radius:50%;background:rgba(196,104,90,0.1);border:1px solid rgba(196,104,90,0.15);cursor:pointer;font-size:9px;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 0.2s;color:var(--rose);font-family:'DM Sans',sans-serif;}
+.groom-card:hover .groom-del{opacity:1;}
+
+/* ════════════════════════
+   MOOD LOG
+════════════════════════ */
+.mood-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:14px 0;}
+.mood-btn{width:50px;height:50px;border-radius:50%;border:2px solid var(--border);background:var(--parch);font-size:22px;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;}
+.mood-btn:hover{transform:scale(1.15);border-color:var(--gold);}
+.mood-btn.sel{border-color:var(--gold);box-shadow:0 0 0 4px rgba(196,154,60,0.15);transform:scale(1.08);}
+
+/* ════════════════════════
+   CARE LOGS
+════════════════════════ */
+.care-type-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;}
+.care-type-chip{padding:6px 13px;border:1.5px solid var(--border);border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;transition:all 0.15s;color:#8a7a68;background:var(--parch);font-family:'DM Sans',sans-serif;}
+.care-type-chip:hover{border-color:var(--gold);color:var(--amber);}
+.care-type-chip.active{background:var(--gold);color:#fff;border-color:transparent;box-shadow:0 3px 10px rgba(196,154,60,0.3);}
+
+/* ════════════════════════
+   PET PROFILE HEADER
+════════════════════════ */
+.pet-profile-hd{background:linear-gradient(135deg,var(--ink2),#3d2c18);border-radius:18px;padding:26px;margin-bottom:20px;display:flex;gap:20px;align-items:center;box-shadow:0 8px 32px rgba(0,0,0,0.18);position:relative;overflow:hidden;}
+.pet-profile-hd::after{content:'';position:absolute;right:-30px;top:-30px;width:120px;height:120px;background:rgba(196,154,60,0.06);border-radius:50%;}
+.pet-profile-avatar{width:80px;height:80px;border-radius:20px;background:linear-gradient(135deg,var(--gold),var(--amber));display:flex;align-items:center;justify-content:center;font-size:40px;flex-shrink:0;box-shadow:0 6px 20px rgba(196,154,60,0.3);}
+.pet-profile-info h2{font-family:'Cormorant Garamond',serif;font-size:28px;color:#fff;font-weight:700;line-height:1.1;}
+.pet-profile-info p{color:rgba(255,255,255,0.5);font-size:13px;margin-top:4px;}
+.pet-profile-chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px;}
+.pchip{padding:4px 12px;border-radius:20px;border:1px solid rgba(196,154,60,0.3);background:rgba(196,154,60,0.1);color:var(--gold3);font-size:11px;font-weight:600;}
+.pet-profile-edit{margin-left:auto;flex-shrink:0;}
+
+/* ════════════════════════
+   INLINE EDIT
+════════════════════════ */
+.inline-edit{display:flex;align-items:center;gap:6px;}
+.inline-edit input{background:transparent;border:none;border-bottom:1.5px solid var(--border);padding:2px 4px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--ink);outline:none;width:100%;}
+.inline-edit input:focus{border-bottom-color:var(--gold);}
+.ie-save{padding:3px 10px;background:var(--gold);color:#fff;border:none;border-radius:6px;font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;}
+
+/* ════════════════════════
+   SERVICES / EXPENSES
+════════════════════════ */
+.expense-row{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:11px;border:1px solid var(--border2);background:var(--parch);margin-bottom:8px;transition:all 0.2s;}
+.expense-row:hover{border-color:var(--border);background:var(--white);}
+.exp-cat{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+.exp-title{flex:1;font-size:13px;font-weight:600;color:var(--ink);}
+.exp-sub{font-size:11px;color:#8a7a68;}
+.exp-amount{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:700;color:var(--ink);}
+.exp-amount.pos{color:var(--sage);}
+.exp-amount.neg{color:var(--rose);}
+
+/* ════════════════════════
+   VACCINATION TABLE
+════════════════════════ */
+.vac-item{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:11px;border:1px solid var(--border2);background:var(--parch);margin-bottom:8px;transition:all 0.2s;}
+.vac-item:hover{border-color:var(--border);background:var(--white);}
+.vac-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.vac-name{font-size:13px;font-weight:600;flex:1;color:var(--ink);}
+.vac-dates{font-size:11px;color:#8a7a68;}
+
+/* ════════════════════════
+   FOOD / NUTRITION
+════════════════════════ */
+.meal-slot{padding:10px 14px;border-radius:11px;border:1px solid var(--border2);background:var(--parch);margin-bottom:8px;display:flex;align-items:center;gap:10px;transition:all 0.2s;}
+.meal-slot:hover{border-color:var(--border);background:var(--white);}
+.meal-time-pill{padding:3px 11px;border-radius:20px;font-size:10px;font-weight:700;flex-shrink:0;}
+.meal-desc{flex:1;font-size:13px;color:var(--ink);}
+.meal-qty{font-size:12px;font-weight:600;color:#8a7a68;}
+
+/* ════════════════════════
+   CONTACTS
+════════════════════════ */
+.contact-card{display:flex;align-items:center;gap:12px;padding:13px 16px;border-radius:12px;border:1px solid var(--border2);background:var(--parch);margin-bottom:10px;transition:all 0.2s;}
+.contact-card:hover{border-color:var(--sky);background:var(--white);}
+.contact-ava{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+.contact-name{font-size:13px;font-weight:600;color:var(--ink);}
+.contact-role{font-size:11px;color:#8a7a68;margin-top:1px;}
+.contact-ph{margin-left:auto;font-size:13px;font-weight:600;color:var(--sky);flex-shrink:0;}
+
+/* ════════════════════════
+   NOTES / JOURNAL
+════════════════════════ */
+.note-card{padding:14px 16px;border-radius:13px;border:1px solid var(--border2);border-left:3px solid var(--nc,var(--gold));background:var(--parch);margin-bottom:10px;transition:all 0.2s;}
+.note-card:hover{background:var(--white);border-color:var(--border);}
+.note-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.note-label{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#8a7a68;}
+.note-date{font-size:10px;color:#9a8a78;}
+.note-body{font-size:13px;color:var(--ink);line-height:1.6;}
+
+/* ════════════════════════
+   TRAINING LOG
+════════════════════════ */
+.training-item{padding:12px 14px;border-radius:11px;border:1px solid var(--border2);background:var(--parch);margin-bottom:8px;display:flex;gap:12px;align-items:flex-start;transition:all 0.2s;}
+.training-item:hover{border-color:var(--border);background:var(--white);}
+.train-status{width:10px;height:10px;border-radius:50%;margin-top:4px;flex-shrink:0;}
+
+/* ════════════════════════
+   APPOINTMENTS
+════════════════════════ */
+.appt-item{display:flex;gap:12px;padding:12px 14px;border-radius:12px;border:1px solid var(--border2);background:var(--parch);margin-bottom:8px;transition:all 0.2s;}
+.appt-item:hover{border-color:var(--border);background:var(--white);}
+.appt-date-box{width:44px;min-width:44px;height:44px;border-radius:11px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.appt-day{font-family:'Cinzel',serif;font-size:18px;font-weight:600;line-height:1;}
+.appt-mon{font-size:9px;letter-spacing:1px;text-transform:uppercase;margin-top:1px;}
+.appt-title{font-size:13px;font-weight:600;color:var(--ink);}
+.appt-sub{font-size:11px;color:#8a7a68;margin-top:2px;}
+
+/* ════════════════════════
+   MEDIA / GALLERY
+════════════════════════ */
+.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px;}
+.gallery-item{aspect-ratio:1;border-radius:12px;background:linear-gradient(135deg,var(--parch2),var(--parch));border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:32px;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden;}
+.gallery-item:hover{transform:scale(1.04);border-color:var(--border);}
+.gallery-add{border:2px dashed var(--border);background:transparent;color:#9a8a78;font-size:20px;cursor:pointer;}
+
+/* ════════════════════════
+   INSURANCE / DOCUMENTS
+════════════════════════ */
+.doc-item{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:12px;border:1px solid var(--border2);background:var(--parch);margin-bottom:8px;transition:all 0.2s;}
+.doc-item:hover{border-color:var(--gold);background:var(--white);}
+.doc-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+
+/* ════════════════════════
+   RESPONSIVE
+════════════════════════ */
+@media(max-width:960px){
+  .dash-grid{grid-template-columns:repeat(2,1fr);}
+  .dash-two,.dash-three{grid-template-columns:1fr;}
+}
+@media(max-width:750px){
+  .sidebar{transform:translateX(-100%);}
+  .sidebar.open{transform:translateX(0);}
+  .main{margin-left:0;}
+  .burger{display:flex;}
+  .dash-grid{grid-template-columns:1fr 1fr;}
+  .dash-hero-stats{display:none;}
+  .content{padding:20px 16px 80px;}
+  .topbar{padding:0 16px;}
+}
+
+/* ANIMATIONS */
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.animate-stagger>*{animation:slideUp 0.4s ease both;}
+.animate-stagger>*:nth-child(1){animation-delay:0.05s}
+.animate-stagger>*:nth-child(2){animation-delay:0.10s}
+.animate-stagger>*:nth-child(3){animation-delay:0.15s}
+.animate-stagger>*:nth-child(4){animation-delay:0.20s}
+.animate-stagger>*:nth-child(5){animation-delay:0.25s}
+
+/* OVERLAY for mobile */
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:49;}
+.sidebar-overlay.open{display:block;}
+
+  /* ── EDITABLE NOTICE BANNER ── */
+  .edit-banner {
+    background: linear-gradient(135deg, #1a1108 0%, #2d1f0e 50%, #1a1108 100%);
+    border-bottom: 1px solid rgba(196,154,60,0.3);
+    padding: 10px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .edit-banner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 40px,
+      rgba(196,154,60,0.03) 40px,
+      rgba(196,154,60,0.03) 41px
+    );
+  }
+  .edit-banner-icon {
+    font-size: 16px;
+    animation: pulse 2s ease-in-out infinite;
+    flex-shrink: 0;
+  }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.7;transform:scale(1.1)} }
+  .edit-banner-text {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    color: rgba(255,255,255,0.75);
+    letter-spacing: 0.3px;
+    text-align: center;
+    line-height: 1.5;
+  }
+  .edit-banner-text strong {
+    color: var(--gold2);
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+  .edit-banner-tag {
+    background: rgba(196,154,60,0.15);
+    border: 1px solid rgba(196,154,60,0.3);
+    color: var(--gold2);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .edit-banner-examples {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 4px;
+  }
+  .edit-ex {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.55);
+    font-size: 10px;
+    padding: 2px 9px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+
+  /* ════════════════════════
+     LOADING SCREEN
+  ════════════════════════ */
+  #loadingScreen {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: #1a1108;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    overflow: hidden;
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  #loadingScreen.fade-out {
+    opacity: 0;
+    pointer-events: none;
+  }
+  /* Radial glow behind logo */
+  .ls-glow {
+    position: absolute;
+    width: 500px; height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(196,154,60,0.12) 0%, transparent 70%);
+    animation: lsGlowPulse 2.5s ease-in-out infinite;
+  }
+  @keyframes lsGlowPulse { 0%,100%{transform:scale(1);opacity:0.6} 50%{transform:scale(1.15);opacity:1} }
+
+  /* Thumbnail card */
+  .ls-card {
+    position: relative;
+    width: 220px; height: 220px;
+    border-radius: 32px;
+    background: linear-gradient(145deg, #2d1f0e 0%, #1a1108 100%);
+    border: 1px solid rgba(196,154,60,0.3);
+    box-shadow:
+      0 0 0 1px rgba(196,154,60,0.1),
+      0 30px 80px rgba(0,0,0,0.5),
+      0 0 60px rgba(196,154,60,0.08);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    animation: lsCardIn 0.8s cubic-bezier(.34,1.56,.64,1) both;
+    margin-bottom: 36px;
+    overflow: hidden;
+  }
+  .ls-card::before {
+    content: '';
+    position: absolute;
+    top: -1px; left: 20%; right: 20%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(196,154,60,0.6), transparent);
+  }
+  .ls-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 30% 20%, rgba(196,154,60,0.06) 0%, transparent 60%);
+  }
+  @keyframes lsCardIn { from{opacity:0;transform:scale(0.7) translateY(20px)} to{opacity:1;transform:scale(1) translateY(0)} }
+
+  .ls-paw-big {
+    font-size: 72px;
+    line-height: 1;
+    animation: lsPawBounce 2s ease-in-out infinite;
+    position: relative;
+    z-index: 1;
+    filter: drop-shadow(0 8px 20px rgba(196,154,60,0.3));
+  }
+  @keyframes lsPawBounce { 0%,100%{transform:translateY(0) rotate(-3deg)} 50%{transform:translateY(-8px) rotate(3deg)} }
+
+  .ls-app-name {
+    font-family: 'Cinzel', serif;
+    font-size: 22px;
+    color: var(--gold2);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    position: relative;
+    z-index: 1;
+    text-shadow: 0 2px 12px rgba(196,154,60,0.4);
+  }
+  .ls-app-sub {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 10px;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    position: relative;
+    z-index: 1;
+    margin-top: -6px;
+  }
+  /* Gold line divider on card */
+  .ls-divider {
+    width: 60px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Tagline below card */
+  .ls-tagline {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 17px;
+    font-style: italic;
+    color: rgba(255,255,255,0.45);
+    letter-spacing: 0.5px;
+    animation: lsFadeUp 0.9s ease 0.4s both;
+    margin-bottom: 40px;
+  }
+  @keyframes lsFadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+
+  /* Progress bar */
+  .ls-progress-wrap {
+    width: 200px;
+    animation: lsFadeUp 0.9s ease 0.6s both;
+  }
+  .ls-progress-label {
+    font-size: 10px;
+    color: rgba(255,255,255,0.25);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 8px;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .ls-progress-track {
+    height: 3px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 20px;
+    overflow: hidden;
+  }
+  .ls-progress-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 20px;
+    background: linear-gradient(90deg, var(--gold), var(--gold2), var(--amber));
+    animation: lsLoad 2s cubic-bezier(.4,0,.2,1) 0.3s forwards;
+    box-shadow: 0 0 8px rgba(196,154,60,0.5);
+  }
+  @keyframes lsLoad { 0%{width:0%} 60%{width:75%} 85%{width:92%} 100%{width:100%} }
+
+  /* Floating paw prints */
+  .ls-float-paw {
+    position: absolute;
+    font-size: 20px;
+    opacity: 0.06;
+    animation: lsFloat linear infinite;
+  }
+  @keyframes lsFloat {
+    0%  { transform: translateY(100vh) rotate(0deg);   opacity: 0; }
+    10% { opacity: 0.06; }
+    90% { opacity: 0.06; }
+    100%{ transform: translateY(-100px) rotate(360deg); opacity: 0; }
+  }
+
+  /* Pet silhouettes row at bottom of card */
+  .ls-pets-row {
+    display: flex;
+    gap: 8px;
+    position: relative;
+    z-index: 1;
+  }
+  .ls-pet-icon {
+    font-size: 18px;
+    opacity: 0.6;
+    animation: lsPetAppear 0.4s ease both;
+  }
+  .ls-pet-icon:nth-child(1){animation-delay:0.8s}
+  .ls-pet-icon:nth-child(2){animation-delay:1.0s}
+  .ls-pet-icon:nth-child(3){animation-delay:1.2s}
+  .ls-pet-icon:nth-child(4){animation-delay:1.4s}
+  .ls-pet-icon:nth-child(5){animation-delay:1.6s}
+  @keyframes lsPetAppear { from{opacity:0;transform:scale(0)} to{opacity:0.6;transform:scale(1)} }
+
+  /* ── DASHBOARD EDIT HINT ── */
+  .dash-edit-hint {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(196,154,60,0.07);
+    border: 1px solid rgba(196,154,60,0.22);
+    border-radius: 40px;
+    padding: 8px 16px 8px 12px;
+    margin-bottom: 18px;
+    animation: lsFadeUp 0.5s ease 0.15s both;
+    width: auto;
+  }
+  .deh-arrow {
+    color: var(--gold);
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    animation: arrowPulse 1.6s ease-in-out infinite;
+  }
+  @keyframes arrowPulse { 0%,100%{transform:translateX(0);opacity:1} 50%{transform:translateX(-5px);opacity:0.6} }
+  .deh-label { display:flex; flex-direction:column; gap:1px; }
+  .deh-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+  .deh-sub {
+    font-size: 11px;
+    color: #8a7a68;
+    white-space: nowrap;
+  }
+  .deh-close {
+    margin-left: 6px;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: transparent;
+    cursor: pointer;
+    font-size: 10px;
+    color: #8a7a68;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.15s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .deh-close:hover { background: var(--rose2); color: #fff; border-color: transparent; }
+  @media(max-width:750px) { .dash-edit-hint { display: none; } }
+
+  </style>
+</head>
+<body>
+
+
+<!-- ══════ LOADING SCREEN ══════ -->
+<div id="loadingScreen">
+  <!-- Floating paws background -->
+  <div class="ls-float-paw" style="left:8%;animation-duration:8s;animation-delay:0s;">🐾</div>
+  <div class="ls-float-paw" style="left:22%;animation-duration:11s;animation-delay:2s;">🐾</div>
+  <div class="ls-float-paw" style="left:40%;animation-duration:9s;animation-delay:1s;">🐾</div>
+  <div class="ls-float-paw" style="left:58%;animation-duration:13s;animation-delay:3s;">🐾</div>
+  <div class="ls-float-paw" style="left:75%;animation-duration:10s;animation-delay:0.5s;">🐾</div>
+  <div class="ls-float-paw" style="left:90%;animation-duration:7s;animation-delay:1.5s;">🐾</div>
+  <!-- Glow -->
+  <div class="ls-glow"></div>
+  <!-- Main card (acts as thumbnail) -->
+  <div class="ls-card">
+    <div class="ls-paw-big">🐾</div>
+    <div class="ls-app-name">PawKeeper</div>
+    <div class="ls-divider"></div>
+    <div class="ls-app-sub">Pro Edition</div>
+    <div class="ls-pets-row">
+      <span class="ls-pet-icon">🐱</span>
+      <span class="ls-pet-icon">🐶</span>
+      <span class="ls-pet-icon">🐰</span>
+      <span class="ls-pet-icon">🦜</span>
+      <span class="ls-pet-icon">🐠</span>
+    </div>
+  </div>
+  <div class="ls-tagline">Your Luxury Pet Care Companion</div>
+  <div class="ls-progress-wrap">
+    <div class="ls-progress-label">Loading your pets…</div>
+    <div class="ls-progress-track">
+      <div class="ls-progress-fill" id="lsBar"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── SIDEBAR ── -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-icon">🐾</div>
+      <div>
+        <div>PawKeeper</div>
+        <div class="sidebar-tagline">Pro Edition</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sidebar-pet-switcher">
+    <div class="sidebar-pet-label">My Pets</div>
+    <div class="sidebar-pet-list" id="sidebarPetList"></div>
+    <button class="sidebar-add-pet" onclick="openAddPetModal()">＋ Add Pet</button>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Overview</div>
+    <div class="nav-item active" onclick="goPanel('dashboard',this)"><div class="nav-icon">🏠</div>Dashboard</div>
+    <div class="nav-item" onclick="goPanel('profile',this)"><div class="nav-icon">🐾</div>Pet Profile</div>
+
+    <div class="nav-section-label">Health</div>
+    <div class="nav-item" onclick="goPanel('health',this)"><div class="nav-icon">💉</div>Vaccinations</div>
+    <div class="nav-item" onclick="goPanel('medications',this)"><div class="nav-icon">💊</div>Medications</div>
+    <div class="nav-item" onclick="goPanel('weight',this)"><div class="nav-icon">⚖️</div>Weight & Growth</div>
+    <div class="nav-item" onclick="goPanel('mood',this)"><div class="nav-icon">😊</div>Mood & Behaviour</div>
+
+    <div class="nav-section-label">Care</div>
+    <div class="nav-item" onclick="goPanel('carelogs',this)"><div class="nav-icon">📋</div>Care Logs</div>
+    <div class="nav-item" onclick="goPanel('grooming',this)"><div class="nav-icon">✂️</div>Grooming</div>
+    <div class="nav-item" onclick="goPanel('nutrition',this)"><div class="nav-icon">🥣</div>Nutrition & Diet</div>
+    <div class="nav-item" onclick="goPanel('training',this)"><div class="nav-icon">🏋️</div>Training</div>
+    <div class="nav-item" onclick="goPanel('appointments',this)"><div class="nav-icon">📅</div>Appointments</div>
+
+    <div class="nav-section-label">Finance & More</div>
+    <div class="nav-item" onclick="goPanel('expenses',this)"><div class="nav-icon">💰</div>Expenses</div>
+    <div class="nav-item" onclick="goPanel('contacts',this)"><div class="nav-icon">📞</div>Contacts</div>
+    <div class="nav-item" onclick="goPanel('documents',this)"><div class="nav-icon">📄</div>Documents</div>
+    <div class="nav-item" onclick="goPanel('gallery',this)"><div class="nav-icon">🖼️</div>Gallery</div>
+    <div class="nav-item" onclick="goPanel('journal',this)"><div class="nav-icon">📝</div>Health Journal</div>
+    <div class="nav-item" onclick="goPanel('reminders',this)"><div class="nav-icon">🔔</div>Reminders</div>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="sidebar-user">
+      <div class="sidebar-user-avatar">👤</div>
+      <div>
+        <div class="sidebar-user-name" id="ownerNameDisplay">Pet Owner</div>
+        <div class="sidebar-user-plan">✦ Pro Member</div>
+      </div>
+    </div>
+  </div>
+</aside>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+<!-- ── MAIN ── -->
+<main class="main">
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:14px;">
+      <button class="burger" onclick="toggleSidebar()">☰</button>
+      <div class="topbar-title" id="topbarTitle">Dashboard</div>
+    </div>
+    <div class="topbar-right">
+      <button class="topbar-btn ghost" onclick="openSettingsModal()">⚙️ Settings</button>
+      <button class="topbar-btn primary" onclick="openAddPetModal()">＋ Add Pet</button>
+    </div>
+  </div>
+
+
+  <!-- ── EDITABLE NOTICE BANNER ── -->
+  <div class="edit-banner">
+    <div class="edit-banner-icon">✏️</div>
+    <div>
+      <div class="edit-banner-text">
+        <strong>✏️ All Examples — Edit Everything to Make It Yours</strong>
+      </div>
+      <div class="edit-banner-examples">
+        <span class="edit-ex">🐾 Pet name & profile</span>
+        <span class="edit-ex">💉 Vaccine records</span>
+        <span class="edit-ex">✂️ Grooming tasks</span>
+        <span class="edit-ex">🥣 Meal plan</span>
+        <span class="edit-ex">📅 Appointments</span>
+        <span class="edit-ex">💰 Expenses</span>
+        <span class="edit-ex">📞 Contacts</span>
+        <span class="edit-ex">& much more…</span>
+      </div>
+    </div>
+    <div class="edit-banner-tag">✦ Fully Editable</div>
+  </div>
+
+  <div class="content">
+
+  <!-- ══════════ DASHBOARD ══════════ -->
+  <div class="panel active" id="panel-dashboard">
+
+    <!-- DASHBOARD EDIT HINT -->
+    <div class="dash-edit-hint" id="dashHint">
+      <div class="deh-arrow">
+        <svg width="44" height="22" viewBox="0 0 44 22" fill="none">
+          <path d="M42 11 H4 M4 11 L12 4 M4 11 L12 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="deh-label">
+        <span class="deh-title">Edit your pet care faster from here</span>
+        <span class="deh-sub">Use the sidebar to jump to any section</span>
+      </div>
+      <button class="deh-close" onclick="document.getElementById('dashHint').style.display='none'">✕</button>
+    </div>
+
+    <div class="dash-hero">
+      <div class="dash-hero-text">
+        <h2>Welcome back, <em id="dashGreetName">Pet Lover</em></h2>
+        <p id="dashSubtitle">You have 0 upcoming reminders today</p>
+      </div>
+      <div class="dash-hero-stats">
+        <div class="hero-stat"><div class="hero-stat-num" id="dsPets">0</div><div class="hero-stat-label">Pets</div></div>
+        <div class="hero-stat"><div class="hero-stat-num" id="dsLogs">0</div><div class="hero-stat-label">Care Logs</div></div>
+        <div class="hero-stat"><div class="hero-stat-num" id="dsAppts">0</div><div class="hero-stat-label">Appointments</div></div>
+        <div class="hero-stat"><div class="hero-stat-num" id="dsReminders">0</div><div class="hero-stat-label">Reminders</div></div>
+      </div>
+    </div>
+
+    <div class="dash-grid animate-stagger">
+      <div class="kpi-card" onclick="goPanel('health',null)" style="cursor:pointer;" title="Go to Vaccinations"><div class="kpi-icon" style="background:rgba(196,154,60,0.12);">💉</div><div class="kpi-val" id="kpiVac">0</div><div class="kpi-label">Vaccines up to date</div><div class="kpi-delta up" id="kpiVacDelta">All current</div><div style="font-size:10px;color:var(--gold);margin-top:6px;font-weight:600;letter-spacing:0.5px;">View →</div></div>
+      <div class="kpi-card" onclick="goPanel('medications',null)" style="cursor:pointer;" title="Go to Medications"><div class="kpi-icon" style="background:rgba(74,124,95,0.12);">💊</div><div class="kpi-val" id="kpiMed">0</div><div class="kpi-label">Active medications</div><div class="kpi-delta up">On schedule</div><div style="font-size:10px;color:var(--sage);margin-top:6px;font-weight:600;letter-spacing:0.5px;">View →</div></div>
+      <div class="kpi-card" onclick="goPanel('grooming',null)" style="cursor:pointer;" title="Go to Grooming"><div class="kpi-icon" style="background:rgba(196,104,90,0.1);">✂️</div><div class="kpi-val" id="kpiGroom">0</div><div class="kpi-label">Grooming tasks</div><div class="kpi-delta warn" id="kpiGroomDelta">Check tasks</div><div style="font-size:10px;color:var(--rose);margin-top:6px;font-weight:600;letter-spacing:0.5px;">View →</div></div>
+      <div class="kpi-card" onclick="goPanel('appointments',null)" style="cursor:pointer;" title="Go to Appointments"><div class="kpi-icon" style="background:rgba(74,127,168,0.12);">📅</div><div class="kpi-val" id="kpiAppt">0</div><div class="kpi-label">Upcoming appointments</div><div class="kpi-delta up">Scheduled</div><div style="font-size:10px;color:var(--sky);margin-top:6px;font-weight:600;letter-spacing:0.5px;">View →</div></div>
+    </div>
+
+    <div class="dash-two">
+      <div class="card">
+        <div class="card-hd"><div class="card-hd-left"><div class="card-hd-icon" style="background:rgba(196,154,60,0.12);">🔔</div><div><div class="card-hd-title">Upcoming Reminders</div><div class="card-hd-sub">Next 7 days</div></div></div><button class="btn btn-ghost btn-sm" onclick="goPanel('reminders',null)">View all</button></div>
+        <div id="dashReminders"></div>
+      </div>
+      <div class="card">
+        <div class="card-hd"><div class="card-hd-left"><div class="card-hd-icon" style="background:rgba(74,127,168,0.12);">📅</div><div><div class="card-hd-title">Next Appointments</div><div class="card-hd-sub">Scheduled visits</div></div></div><button class="btn btn-ghost btn-sm" onclick="goPanel('appointments',null)">View all</button></div>
+        <div id="dashAppts"></div>
+      </div>
+    </div>
+
+    <div class="dash-two">
+      <div class="card">
+        <div class="card-hd"><div class="card-hd-left"><div class="card-hd-icon" style="background:rgba(74,124,95,0.12);">📋</div><div><div class="card-hd-title">Recent Care Logs</div><div class="card-hd-sub">Latest activity</div></div></div><button class="btn btn-ghost btn-sm" onclick="goPanel('carelogs',null)">View all</button></div>
+        <div id="dashCareLogs"></div>
+      </div>
+      <div class="card">
+        <div class="card-hd"><div class="card-hd-left"><div class="card-hd-icon" style="background:rgba(196,104,90,0.1);">💰</div><div><div class="card-hd-title">Spending Summary</div><div class="card-hd-sub">This month</div></div></div><button class="btn btn-ghost btn-sm" onclick="goPanel('expenses',null)">View all</button></div>
+        <div id="dashExpenses"></div>
+        <div style="margin-top:12px;">
+          <div class="prog-row"><span>Monthly Budget</span><span id="budgetPct">0%</span></div>
+          <div class="prog-track"><div class="prog-fill" id="budgetBar" style="width:0%;background:linear-gradient(90deg,var(--sage),var(--sage2));"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ══════════ PET PROFILE ══════════ -->
+  <div class="panel" id="panel-profile">
+    <div id="profileContent"></div>
+  </div>
+
+  <!-- ══════════ HEALTH / VACCINATIONS ══════════ -->
+  <div class="panel" id="panel-health">
+    <div class="card" style="margin-bottom:20px;">
+      <div class="card-hd"><div class="card-hd-left"><div class="card-hd-icon" style="background:rgba(74,124,95,0.12);">💉</div><div><div class="card-hd-title">Vaccination Record</div><div class="card-hd-sub">Track all immunizations</div></div></div></div>
+      <div id="vaccineList"></div>
+      <div class="sect"><h3>Add Vaccine</h3></div>
+      <div class="frow"><div class="field"><label>Vaccine Name</label><input id="vacName" placeholder="e.g. Rabies"></div><div class="field"><label>Date Given</label><input type="date" id="vacDate"></div><div class="field"><label>Next Due</label><input type="date" id="vacNext"></div><div class="field"><label>Vet / Clinic</label><input id="vacVet" placeholder="e.g. City Vet Clinic"></div></div>
+      <button class="btn btn-sage" onclick="addVaccine()">＋ Add Record</button>
+    </div>
+  </div>
+
+  <!-- ══════════ MEDICATIONS ══════════ -->
+  <div class="panel" id="panel-medications">
+    <div class="card" style="margin-bottom:20px;">
+      <div class="card-hd"><div class="card-hd-left"><div class="card-hd-icon" style="background:rgba(122,104,168,0.15);">💊</div><div><div class="card-hd-title">Medications</div><div class="card-hd-sub">Active & past prescriptions</div></div></div></div>
+      <div id="medList"></div>
+      <div class="sect"><h3>Add Medication</h3></div>
+      <div class="frow"><div class="field"><label>Medicine Name</label><input id="medName" placeholder="e.g. Flea treatment"></div><div class="field"><label>Dosage</label><input id="medDose" placeholder="e.g. 0.5ml"></div><div class="field"><label>Frequency</label><select id="medFreq"><option>Daily</option><option>Every 2 days</option><option>Weekly</option><option>Monthly</option><option>As needed</option><option>Course (finish all)</option></select></div></div>
+      <div class="frow"><div class="field"><label>Start Date</label><input type="date" id="medStart"></div><div class="field"><label>End / Next Due</label><input type="date" id="medEnd"></div><div class="field"><label>Prescribed By</label><input id="medDoc" placeholder="e.g. Dr. Morgan"></div></div>
+      <button class="btn btn-gold" onclick="addMed()">＋ Add Medication</button>
+    </div>
+  </div>
+
+  <!-- ══════════ WEIGHT ══════════ -->
+  <div class="panel" id="panel-weight">
+    <div class="dash-two">
+      <div class="card">
+        <div class="card-hd"><div class="card-hd-left"><div class="card-hd-icon" style="background:rgba(196,154,60,0.12);">⚖️</div><div><div class="card-hd-title">Weight Chart</div><div class="card-hd-sub">Growth over time</div></div></div></div>
+        <div class="chart-wrap"><svg class="chart-svg" id="weightChart" viewBox="0 0 360 130" preserveAspectRatio="none"></svg></div>
+        <div id="weightList" style="max-height:200px;overflow-y:auto;"></div>
+      </div>
+      <div class="card">
+        <div class="card-hd"><div class="card-hd-left"><div class="card-hd-icon" style="background:rgba(74,127,168,0.12);">📏</div><div><div class="card-hd-title">Log Weight</div></div></div></div>
+        <div class="frow"><div class="field"><label>Weight (kg)</label><input type="number" id="wVal" placeholder="4.2" step="0.1" min="0"></div><div class="field"><label>Date</label><input type="date" id="wDate"></div></div>
+        <div class="frow"><div class="field"><label>Body Condition (1-9)</label><input type="number" id="wBCS" placeholder="5" min="1" max="9"></div><div class="field"><label>Notes</label><input id="wNote" placeholder="e.g. After vet visit"></div></div>
+        <button class="btn btn-gold" onclick="addWeight()">＋ Log Entry</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ MOOD ══════════ -->
+  <div class="panel" id="panel-mood">
+    <div class="dash-two">
+      <div class="card">
+        <div class="card-hd"><div class="card-hd-left"><div class="card-hd-icon" style="background:rgba(196,104,90,0.1);">😊</div><div><div class="card-hd-title">Log Today's Mood</div></div></div></div>
+        <p style="font-size:13px;color:#8a7a68;margin-bottom:4px;">How is your pet feeling?</p>
+        <div class="mood-row">
+          <button class="mood-btn" onclick="selMood('😄',this)" title="Excellent">😄</button>
+          <button class="mood-btn" onclick="selMood('😊',this)" title="Happy">😊</button>
+          <button class="mood-btn" onclick="selMood('😐',this)" title="Neutral">😐</button>
+          <button class="mood-btn" onclick="selMood('😴',this)" title="Tired">😴</button>
+          <button class="mood-btn" onclick="selMood('😟',this)" title="Anxious">😟</button>
+          <button class="mood-btn" onclick="selMood('🤒',this)" title="Unwell">🤒</button>
+          <button class="mood-btn" onclick="selMood('🤕',this)" title="In Pain">🤕</button>
+          <button class="mood-btn" onclick="selMood('😾',this)" title="Aggressive">😾</button>
+        </div>
+        <div class="frow" style="margin-top:12px;"><div class="field"><label>Energy Level</label><select id="moodEnergy"><option value="">Select…</option><option>Hyperactive</option><option>Normal</option><option>Low energy</option><option>Lethargic</option></select></div><div class="field"><label>Appetite</label><select id="moodAppetite"><option value="">Select…</option><option>Ate everything</option><option>Ate normally</option><option>Ate little</option><option>Refused food</option></select></div></div>
+        <div class="field" style="margin-bottom:10px;"><label>Observation Note</label><input id="moodNote" placeholder="e.g. Very playful, loves the new toy…"></div>
+        <button class="btn btn-rose" onclick="logMood()">Log Mood</button>
+      </div>
+      <div class="card">
+        <div class="card-hd"><div class="card-hd-left"><div class="card-hd-icon" style="background:rgba(196,154,60,0.12);">📊</div><div><div class="card-hd-title">Mood History</div></div></div></div>
+        <div id="moodList" style="max-height:360px;overflow-y:auto;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ CARE LOGS ══════════ -->
+  <div class="panel" id="panel-carelogs">
+    <div class="dash-two">
+      <div class="card">
+        <div class="card-hd"><div class="card-hd-left"><div class="card-hd-icon" style="background:rgba(74,124,95,0.12);">＋</div><div><div class="card-hd-title">Log Care Activity</div></div></div></div>
+        <div class="field" style="margin-bottom:10px;"><label>Care Type</label></div>
+        <div class="care-type-row" id="careTypeRow"></div>
+        <div class="frow"><div class="field"><label>Date</label><input type="date" id="logDate"></div><div class="field"><label>Time</label><input type="time" id="logTime"></div></div>
+        <div class="frow"><div class="field"><label>Duration / Amount</label><input id="logAmount" placeholder="e.g. 30 min / 1 cup"></div><div class="field"><label>Performed By</label><input id="logBy" placeholder="e.g. Owner / Groomer"></div></div>
+        <div class="field" style="margin-bottom:10px;"><label>Notes</label><textarea id="logNote" placeholder="Any observations…"></textarea></div>
+        <button class="btn btn-sage" onclick="addCareLog()">＋ Save Log</button>
+      </div>
+      <div class="card">
+        <div class="card-hd"><div class="card-hd-left"><div class="card-hd-icon" style="background:rgba(74,124,95,0.12);">📋</div><div><div class="card-hd-title">Recent Logs</div><div class="card-hd-sub">All activity</div></div></div></div>
+        <div id="careLogList" style="max-height:400px;overflow-y:auto;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ GROOMING ══════════ -->
+  <div class="panel" id="panel-grooming">
+    <div class="card" style="margin-bottom:20px;">
+      <div class="card-hd"><div class="card-hd-left"><div class="card-hd-icon" style="background:rgba(196,104,90,0.1);">✂️</div><div><div class="card-hd-title">Grooming Schedule</div><div class="card-hd-sub">Click status to cycle · Hover to remove</div></div></div></div>
+      <div class="groom-grid" id="groomGrid"></div>
+      <div class="sect"><h3>Add Task</h3></div>
+      <div style="margin-bottom:8px;"><div style="font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#8a7a68;margin-bottom:6px;">Choose Emoji</div><div class="epick" id="groomEmojiPick"></div></div>
+      <div class="frow"><div class="field"><label>Task Name</label><input id="groomTaskName" placeholder="e.g. Bath"></div><div class="field"><label>Frequency</label><input id="groomTaskFreq" placeholder="e.g. Monthly"></div><div class="field"><label>Status</label><select id="groomTaskStatus"><option value="upcoming">Upcoming</option><option value="soon">Due Soon</option><option value="overdue">Overdue</option></select></div><div class="field"><label>Assigned To</label><input id="groomAssigned" placeholder="e.g. Groomer / Self"></div></div>
+      <button class="btn btn-gold" onclick="addGroomTask()">＋ Add Task</button>
+    </div>
+  </div>
+
+  <!-- ══════════ NUTRITION ══════════ -->
+  <div class="panel" id="panel-nutrition">
+    <div class="dash-two">
+      <div class="card">
+        <div class="card-hd"><div class="card-hd-left"><div class="card-hd-icon" style="background:rgba(196,154,60,0.12);">🥣</div><div><div class="card-hd-title">Daily Diet Plan</div></div></div></div>
+        <div id="mealList"></div>
+        <div class="sect"><h3>Add Meal</h3></div>
+        <div class="frow"><div class="field"><label>Meal Time</label><select id="mealTime"><option value="morning">🌅 Morning</option><option value="noon">☀️ Noon</option><option value="afternoon">🌤 Afternoon</option><option value="evening">🌆 Evening</option><option value="night">🌙 Night</option></select></div><div class="field"><label>Amount</label><input id="mealAmt" placeholder="e.g. 1 cup"></div></div>
+        <div class="frow"><div class="field"><label>Food Name / Brand</label><input id="mealName" placeholder="e.g. Royal Canin Adult"></div><div class="field"><label>Calories (kcal)</label><input type="number" id="mealCal" placeholder="e.g. 350"></div></div>
+        <button class="btn btn-gold" onclick="addMeal()">＋ Add Meal</button>
+      </div>
+      <div class="card">
+        <div class="card-hd"><div class="card-hd-left"><div class="card-hd-icon" style="background:rgba(74,124,95,0.12);">📊</div><div><div class="card-hd-title">Nutrition Summary</div></div></div></div>
+        <div id="nutritionSummary"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ TRAINING ══════════ -->
+  <div class="panel" id="panel-training">
+    <div class="dash-two">
+      <div class="card">
+        <div class="card-hd"><div class="card-hd-left"><div class="card-hd-icon" style="background:rgba(74,127,168,0.12);">🏋️</div><div><div class="card-hd-title">Training Log</div></div></div></div>
+        <div id="trainingList" style="max-height:360px;overflow-y:auto;"></div>
+      </div>
+      <div class="card">
+        <div class="card-hd"><div class="card-hd-left"><div class="card-hd-icon" style="background:rgba(74,127,168,0.12);">＋</div><div><div class="card-hd-title">Add Training Session</div></div></div></div>
+        <div class="frow"><div class="field"><label>Command / Skill</label><input id="trainCmd" placeholder="e.g. Sit, Stay, Recall"></div><div class="field"><label>Date</label><input type="date" id="trainDate"></div></div>
+        <div class="frow"><div class="field"><label>Duration</label><input id="trainDur" placeholder="e.g. 15 min"></div><div class="field"><label>Reward Used</label><input id="trainReward" placeholder="e.g. Treats, Praise"></div></div>
+        <div class="field" style="margin-bottom:8px;"><label>Progress</label><select id="trainProgress"><option value="learning">🌱 Learning</option><option value="improving">📈 Improving</option><option value="mastered">⭐ Mastered</option><option value="regressed">📉 Needs work</option></select></div>
+        <div class="field" style="margin-bottom:10px;"><label>Notes</label><textarea id="trainNote" placeholder="Observations from this session…"></textarea></div>
+        <button class="btn btn-sky" onclick="addTraining()">＋ Log Session</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ APPOINTMENTS ══════════ -->
+  <div class="panel" id="panel-appointments">
+    <div class="dash-two">
+      <div class="card">
+        <div class="card-hd"><div class="card-hd-left"><div class="card-hd-icon" style="background:rgba(74,127,168,0.12);">📅</div><div><div class="card-hd-title">Appointments</div></div></div></div>
+        <div id="apptList"></div>
+      </div>
+      <div class="card">
+        <div class="card-hd"><div class="card-hd-left"><div class="card-hd-icon" style="background:rgba(74,127,168,0.12);">＋</div><div><div class="card-hd-title">Schedule Appointment</div></div></div></div>
+        <div class="frow"><div class="field"><label>Title</label><input id="apptTitle" placeholder="e.g. Annual checkup"></div><div class="field"><label>Date</label><input type="date" id="apptDate"></div></div>
+        <div class="frow"><div class="field"><label>Time</label><input type="time" id="apptTime"></div><div class="field"><label>Type</label><select id="apptType"><option value="vet">🩺 Vet Visit</option><option value="vaccine">💉 Vaccination</option><option value="groom">✂️ Grooming</option><option value="dental">🦷 Dental</option><option value="specialist">🔬 Specialist</option><option value="other">📌 Other</option></select></div></div>
+        <div class="frow"><div class="field"><label>Clinic / Location</label><input id="apptLocation" placeholder="e.g. City Vet Clinic"></div><div class="field"><label>Estimated Cost</label><input id="apptCost" placeholder="e.g. 2500"></div></div>
+        <div class="field" style="margin-bottom:10px;"><label>Notes</label><textarea id="apptNote" placeholder="Reason for visit, things to discuss…"></textarea></div>
+        <button class="btn btn-sky" onclick="addAppt()">＋ Schedule</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ EXPENSES ══════════ -->
+  <div class="panel" id="panel-expenses">
+    <div class="dash-two">
+      <div class="card">
+        <div class="card-hd"><div class="card-hd-left"><div class="card-hd-icon" style="background:rgba(196,154,60,0.12);">💰</div><div><div class="card-hd-title">Expense Tracker</div></div></div></div>
+        <div id="expenseList" style="max-height:400px;overflow-y:auto;"></div>
+      </div>
+      <div class="card">
+        <div class="card-hd"><div class="card-hd-left"><div class="card-hd-icon" style="background:rgba(74,124,95,0.12);">＋</div><div><div class="card-hd-title">Add Expense</div></div></div></div>
+        <div class="frow"><div class="field"><label>Description</label><input id="expDesc" placeholder="e.g. Vet consultation"></div><div class="field"><label>Amount</label><input type="number" id="expAmt" placeholder="2500" min="0"></div></div>
+        <div class="frow"><div class="field"><label>Category</label><select id="expCat"><option value="vet">🩺 Vet / Medical</option><option value="food">🥣 Food</option><option value="groom">✂️ Grooming</option><option value="toys">🪀 Toys & Accessories</option><option value="med">💊 Medication</option><option value="insurance">🛡️ Insurance</option><option value="boarding">🏠 Boarding</option><option value="other">📌 Other</option></select></div><div class="field"><label>Date</label><input type="date" id="expDate"></div></div>
+        <div class="frow"><div class="field"><label>Monthly Budget</label><input type="number" id="expBudget" placeholder="500"></div></div>
+        <button class="btn btn-gold" onclick="addExpense()">＋ Add Expense</button>
+        <div class="sect"><h3>Summary</h3></div>
+        <div id="expSummary"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ CONTACTS ══════════ -->
+  <div class="panel" id="panel-contacts">
+    <div class="card">
+      <div class="card-hd"><div class="card-hd-left"><div class="card-hd-icon" style="background:rgba(74,127,168,0.12);">📞</div><div><div class="card-hd-title">Emergency & Care Contacts</div></div></div></div>
+      <div id="contactList"></div>
+      <div class="sect"><h3>Add Contact</h3></div>
+      <div class="frow"><div class="field"><label>Name</label><input id="cName" placeholder="e.g. Dr. Morgan"></div><div class="field"><label>Role</label><input id="cRole" placeholder="e.g. Primary Vet"></div></div>
+      <div class="frow"><div class="field"><label>Phone</label><input id="cPhone" placeholder="e.g. +1 555 0123"></div><div class="field"><label>Address / Clinic</label><input id="cAddr" placeholder="e.g. 123 Main St, City"></div></div>
+      <div class="frow"><div class="field"><label>Email</label><input id="cEmail" placeholder="vet@clinic.com"></div><div class="field"><label>Available Hours</label><input id="cHours" placeholder="e.g. Mon-Sat 9am-6pm"></div></div>
+      <button class="btn btn-sky" onclick="addContact()">＋ Add Contact</button>
+    </div>
+  </div>
+
+  <!-- ══════════ DOCUMENTS ══════════ -->
+  <div class="panel" id="panel-documents">
+    <div class="card">
+      <div class="card-hd"><div class="card-hd-left"><div class="card-hd-icon" style="background:rgba(196,154,60,0.12);">📄</div><div><div class="card-hd-title">Documents & Records</div></div></div></div>
+      <div id="docList"></div>
+      <div class="sect"><h3>Add Document</h3></div>
+      <div class="frow"><div class="field"><label>Document Name</label><input id="docName" placeholder="e.g. Pedigree Certificate"></div><div class="field"><label>Type</label><select id="docType"><option value="pedigree">📜 Pedigree</option><option value="insurance">🛡️ Insurance Policy</option><option value="medical">🏥 Medical Record</option><option value="license">📋 License</option><option value="microchip">💡 Microchip Record</option><option value="passport">🌍 Pet Passport</option><option value="other">📌 Other</option></select></div></div>
+      <div class="frow"><div class="field"><label>Issue Date</label><input type="date" id="docDate"></div><div class="field"><label>Expiry Date</label><input type="date" id="docExpiry"></div></div>
+      <div class="field" style="margin-bottom:10px;"><label>Notes / Reference Number</label><input id="docNote" placeholder="e.g. Policy No: ABC-123456"></div>
+      <button class="btn btn-gold" onclick="addDoc()">＋ Add Record</button>
+    </div>
+  </div>
+
+  <!-- ══════════ GALLERY ══════════ -->
+  <div class="panel" id="panel-gallery">
+    <div class="card">
+      <div class="card-hd"><div class="card-hd-left"><div class="card-hd-icon" style="background:rgba(196,154,60,0.12);">🖼️</div><div><div class="card-hd-title">Memory Gallery</div><div class="card-hd-sub">Precious pet moments</div></div></div></div>
+      <div class="gallery-grid" id="galleryGrid"></div>
+      <div class="sect"><h3>Add Memory</h3></div>
+      <div class="frow"><div class="field"><label>Caption</label><input id="galCaption" placeholder="e.g. First day home! 🏡"></div><div class="field"><label>Date</label><input type="date" id="galDate"></div><div class="field"><label>Emoji / Mood</label><input id="galEmoji" placeholder="🐶" maxlength="4"></div></div>
+      <button class="btn btn-gold" onclick="addGalleryItem()">＋ Add Memory</button>
+    </div>
+  </div>
+
+  <!-- ══════════ JOURNAL ══════════ -->
+  <div class="panel" id="panel-journal">
+    <div class="card">
+      <div class="card-hd"><div class="card-hd-left"><div class="card-hd-icon" style="background:rgba(122,104,168,0.15);">📝</div><div><div class="card-hd-title">Health Journal</div><div class="card-hd-sub">Detailed observations & notes</div></div></div></div>
+      <div id="journalList"></div>
+      <div class="sect"><h3>New Entry</h3></div>
+      <div class="frow"><div class="field"><label>Category</label><select id="jCat"><option value="#c49a3c">🩺 General Health</option><option value="#4a7c5f">🍽️ Eating & Nutrition</option><option value="#c4685a">⚠️ Concern / Alert</option><option value="#7a68a8">💜 Behaviour</option><option value="#4a7fa8">📋 Vet Notes</option><option value="#d4780a">🐾 Milestone</option></select></div></div>
+      <div class="field" style="margin-bottom:10px;"><label>Entry</label><textarea id="jText" placeholder="Write your detailed observation…" style="min-height:80px;"></textarea></div>
+      <button class="btn btn-gold" onclick="addJournal()">＋ Save Entry</button>
+    </div>
+  </div>
+
+  <!-- ══════════ REMINDERS ══════════ -->
+  <div class="panel" id="panel-reminders">
+    <div class="dash-two">
+      <div class="card">
+        <div class="card-hd"><div class="card-hd-left"><div class="card-hd-icon" style="background:rgba(196,104,90,0.1);">🔔</div><div><div class="card-hd-title">Reminders</div></div></div></div>
+        <div id="reminderList"></div>
+      </div>
+      <div class="card">
+        <div class="card-hd"><div class="card-hd-left"><div class="card-hd-icon" style="background:rgba(196,104,90,0.1);">＋</div><div><div class="card-hd-title">Add Reminder</div></div></div></div>
+        <div class="frow"><div class="field"><label>Title</label><input id="remTitle" placeholder="e.g. Annual checkup"></div><div class="field"><label>Date</label><input type="date" id="remDate"></div></div>
+        <div class="frow"><div class="field"><label>Time</label><input type="time" id="remTime"></div><div class="field"><label>Type</label><select id="remType"><option value="vet">🩺 Vet</option><option value="vaccine">💉 Vaccine</option><option value="groom">✂️ Grooming</option><option value="med">💊 Medication</option><option value="food">🥣 Feeding</option><option value="training">🏋️ Training</option><option value="other">📌 Other</option></select></div></div>
+        <div class="field" style="margin-bottom:10px;"><label>Note</label><input id="remNote" placeholder="Any details…"></div>
+        <button class="btn btn-rose" onclick="addReminder()">＋ Set Reminder</button>
+      </div>
+    </div>
+  </div>
+
+  </div><!-- /content -->
+</main>
+
+<!-- ══════ ADD PET MODAL ══════ -->
+<div class="modal-bg" id="addPetModal">
+  <div class="modal-box" style="position:relative;">
+    <button class="modal-close" onclick="closeModal('addPetModal')">✕</button>
+    <h3>🐾 Add New Pet</h3>
+    <div class="frow"><div class="field" style="grid-column:1/-1;"><label>Choose Emoji Avatar</label><div class="epick" id="petEmojiPick"></div></div></div>
+    <div class="frow"><div class="field"><label>Pet Name *</label><input id="newPetName" placeholder="e.g. Biscuit"></div><div class="field"><label>Species / Type</label><input id="newPetSpecies" placeholder="e.g. Cat, Dog, Rabbit"></div></div>
+    <div class="frow"><div class="field"><label>Breed</label><input id="newPetBreed" placeholder="e.g. Persian"></div><div class="field"><label>Age</label><input id="newPetAge" placeholder="e.g. 2 years"></div></div>
+    <div class="frow"><div class="field"><label>Weight (kg)</label><input type="number" id="newPetWeight" placeholder="4.5" step="0.1"></div><div class="field"><label>Gender</label><select id="newPetGender"><option value="">Select…</option><option>Male</option><option>Female</option><option>Neutered Male</option><option>Spayed Female</option></select></div></div>
+    <div class="frow"><div class="field"><label>Microchip ID</label><input id="newPetChip" placeholder="Optional"></div><div class="field"><label>Date of Birth</label><input type="date" id="newPetDOB"></div></div>
+    <div class="frow"><div class="field"><label>Primary Vet</label><input id="newPetVet" placeholder="e.g. Dr. Morgan"></div><div class="field"><label>Colour / Markings</label><input id="newPetColor" placeholder="e.g. Orange tabby"></div></div>
+    <div class="field" style="margin-bottom:14px;"><label>Special Notes / Allergies</label><textarea id="newPetNotes" placeholder="Any medical history, special needs…"></textarea></div>
+    <div style="display:flex;gap:10px;">
+      <button class="btn btn-gold" onclick="savePet()">＋ Add Pet</button>
+      <button class="btn btn-ghost" onclick="closeModal('addPetModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ SETTINGS MODAL ══════ -->
+<div class="modal-bg" id="settingsModal">
+  <div class="modal-box" style="position:relative;">
+    <button class="modal-close" onclick="closeModal('settingsModal')">✕</button>
+    <h3>⚙️ Settings</h3>
+    <div class="frow"><div class="field"><label>Your Name</label><input id="settName" placeholder="e.g. Alex Johnson"></div><div class="field"><label>Currency</label><select id="settCurrency"><option value="USD">🇺🇸 USD ($)</option><option value="GBP">🇬🇧 GBP (£)</option><option value="EUR">🇪🇺 EUR (€)</option><option value="AUD">🇦🇺 AUD (A$)</option><option value="CAD">🇨🇦 CAD (C$)</option></select></div></div>
+    <div class="frow"><div class="field"><label>Monthly Budget</label><input type="number" id="settBudget" placeholder="500"></div><div class="field"><label>Weight Unit</label><select id="settWeightUnit"><option value="kg">Kilograms (kg)</option><option value="lbs">Pounds (lbs)</option></select></div></div>
+    <div style="display:flex;gap:10px;margin-top:6px;">
+      <button class="btn btn-gold" onclick="saveSettings()">Save Settings</button>
+      <button class="btn btn-ghost" onclick="closeModal('settingsModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════
+// DATA STORE
+// ══════════════════════════════════════════
+const KEY = 'pawkeeper_pro_v1';
+let db = JSON.parse(localStorage.getItem(KEY)||'null') || {
+  settings: { name:'Pet Owner', currency:'USD', budget:500, weightUnit:'kg' },
+  pets: [],
+  activePet: null,
+  vaccines: {}, weights: {}, meds: {}, meals: {}, grooming: {},
+  moods: {}, carelogs: {}, training: {}, appointments: {},
+  expenses: {}, contacts: {}, documents: {}, gallery: {}, journal: {}, reminders: {}
+};
+
+// Seed demo data if first run
+if (!db.pets.length) {
+  const demoId = 'pet_'+Date.now();
+  db.pets = [{
+    id:demoId, emoji:'🐱', name:'Biscuit', species:'Cat', breed:'Persian Mix',
+    age:'2 years', weight:3.8, gender:'Spayed Female', chip:'CHIP-2024-0012',
+    dob:'2024-02-15', vet:'Dr. Morgan (City Vet)', color:'Orange tabby',
+    notes:'Indoor only. Allergic to chicken-based food. Loves chin scratches.',
+    added: new Date().toISOString()
+  }];
+  db.activePet = demoId;
+  db.vaccines[demoId] = [
+    {id:1,name:'Rabies',date:'2025-03-15',next:'2026-03-15',vet:'City Vet',status:'done'},
+    {id:2,name:'FVRCP',date:'2025-06-01',next:'2026-06-01',vet:'City Vet',status:'done'},
+    {id:3,name:'FeLV',date:'2024-11-10',next:'2025-11-10',vet:'City Vet',status:'overdue'},
+  ];
+  db.weights[demoId] = [{id:1,val:3.2,date:'2025-09-01',bcs:4,note:''},{id:2,val:3.5,date:'2025-11-01',bcs:5,note:''},{id:3,val:3.7,date:'2025-12-15',bcs:5,note:'After diet change'},{id:4,val:3.8,date:'2026-01-20',bcs:5,note:''},{id:5,val:3.8,date:'2026-02-27',bcs:5,note:'Stable'}];
+  db.meds[demoId] = [{id:1,name:'Flea & Tick Spot-On',dose:'0.5ml',freq:'Monthly',start:'2026-02-01',end:'2026-03-01',doc:'Dr. Morgan'},{id:2,name:'Hairball Remedy',dose:'1 tsp',freq:'Daily',start:'2026-01-15',end:'',doc:'Dr. Morgan'}];
+  db.meals[demoId] = [{id:1,time:'morning',name:'Royal Canin Persian Adult',amt:'60g',cal:210},{id:2,time:'noon',name:'Whiskas Wet Food (Tuna)',amt:'1 pouch',cal:85},{id:3,time:'evening',name:'Royal Canin Persian Adult',amt:'60g',cal:210}];
+  db.grooming[demoId] = [{id:1,emoji:'🛁',name:'Bath',freq:'Monthly',status:'upcoming',assigned:'Groomer'},{id:2,emoji:'✂️',name:'Nail Trim',freq:'Every 3 wks',status:'soon',assigned:'Self'},{id:3,emoji:'🪮',name:'Brushing',freq:'Daily',status:'overdue',assigned:'Self'},{id:4,emoji:'👂',name:'Ear Clean',freq:'Monthly',status:'upcoming',assigned:'Vet'},{id:5,emoji:'🦷',name:'Teeth Brush',freq:'Weekly',status:'soon',assigned:'Self'},{id:6,emoji:'👁️',name:'Eye Wipe',freq:'Weekly',status:'upcoming',assigned:'Self'}];
+  db.moods[demoId] = [{id:1,emoji:'😊',energy:'Normal',appetite:'Ate normally',note:'Relaxed afternoon',date:new Date(Date.now()-86400000*2).toISOString()},{id:2,emoji:'😄',energy:'Hyperactive',appetite:'Ate everything',note:'Very playful with new toy!',date:new Date(Date.now()-86400000).toISOString()}];
+  db.carelogs[demoId] = [{id:1,type:'feeding',date:new Date().toISOString(),amount:'60g',by:'Owner',note:'Morning meal',},{id:2,type:'grooming',date:new Date(Date.now()-86400000).toISOString(),amount:'20 min',by:'Self',note:'Full brush out'}];
+  db.training[demoId] = [{id:1,cmd:'Come when called',date:'2026-02-20',dur:'10 min',reward:'Treats',progress:'mastered',note:'Excellent response'},{id:2,cmd:'Sit on command',date:'2026-02-25',dur:'15 min',reward:'Treats',progress:'mastered',note:'Perfect every time'},{id:3,cmd:'No scratch furniture',date:'2026-02-27',dur:'5 min',reward:'Praise',progress:'learning',note:'Getting better'}];
+  db.appointments[demoId] = [{id:1,title:'Annual Wellness Exam',date:'2026-03-10',time:'10:00',type:'vet',location:'City Vet Clinic',cost:120,note:'Full checkup + blood panel'},{id:2,title:'FeLV Booster',date:'2026-03-15',time:'14:00',type:'vaccine',location:'City Vet Clinic',cost:45,note:'Overdue — priority!'}];
+  db.expenses[demoId] = [{id:1,desc:'Vet Consultation',amt:85,cat:'vet',date:'2026-02-01'},{id:2,desc:'Premium Dry Food (2kg)',amt:45,cat:'food',date:'2026-02-05'},{id:3,desc:'Flea Treatment',amt:28,cat:'med',date:'2026-02-10'},{id:4,desc:'Grooming Session',amt:60,cat:'groom',date:'2026-02-18'}];
+  db.contacts[demoId] = [{id:1,name:'Dr. Morgan',role:'Primary Vet',phone:'+1 555 234 5678',addr:'123 Elm Street, Downtown',email:'morgan@cityvet.com',hours:'Mon-Sat 9am-7pm'},{id:2,name:'City Animal Clinic',role:'Emergency',phone:'+1 555 911 0000',addr:'456 Oak Ave, Midtown',email:'info@cityvet.com',hours:'24/7 Emergency'},{id:3,name:'Jamie (Pet Sitter)',role:'Caretaker',phone:'+1 555 987 6543',addr:'',email:'',hours:'Flexible'}];
+  db.documents[demoId] = [{id:1,name:'Vaccination Certificate',type:'medical',date:'2025-06-01',expiry:'2026-06-01',note:'FVRCP + Rabies combined'},{id:2,name:'Pet Insurance Policy',type:'insurance',date:'2025-01-01',expiry:'2026-01-01',note:'PolicyNo: PEI-2025-00412'}];
+  db.gallery[demoId] = [{id:1,caption:'First day home! 🏡',date:'2024-02-20',emoji:'😻'},{id:2,caption:'Favourite nap spot ☀️',date:'2024-05-10',emoji:'😴'},{id:3,caption:'First grooming visit ✂️',date:'2024-07-15',emoji:'✨'},{id:4,caption:'Vet checkup! Being brave',date:'2025-03-15',emoji:'💪'},{id:5,caption:'Playing with new toy 🎀',date:'2026-01-10',emoji:'🎉'}];
+  db.journal[demoId] = [{id:1,cat:'#4a7fa8',label:'📋 Vet Notes',text:'Dr. Morgan noted healthy weight gain since last visit. Dental health is good. Suggested increasing wet food ratio.',date:new Date(Date.now()-86400000*5).toISOString()},{id:2,cat:'#d4780a',label:'🐾 Milestone',text:"Biscuit sat on command for the first time today! Used tiny chicken treats as reward. So proud!",date:new Date(Date.now()-86400000*2).toISOString()}];
+  db.reminders[demoId] = [{id:1,title:'Annual Checkup',date:'2026-03-10',time:'10:00',type:'vet',note:'Bring previous blood work'},{id:2,title:'FeLV Booster Due',date:'2026-03-15',time:'14:00',type:'vaccine',note:'Overdue — schedule ASAP'},{id:3,title:'Monthly Flea Treatment',date:'2026-03-01',time:'09:00',type:'med',note:'Spot-on treatment'}];
+}
+function save() { localStorage.setItem(KEY, JSON.stringify(db)); }
+save();
+
+// ══════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════
+const TITLES = {dashboard:'Dashboard',profile:'Pet Profile',health:'Vaccinations',medications:'Medications',weight:'Weight & Growth',mood:'Mood & Behaviour',carelogs:'Care Logs',grooming:'Grooming',nutrition:'Nutrition & Diet',training:'Training',appointments:'Appointments',expenses:'Expenses',contacts:'Contacts',documents:'Documents',gallery:'Gallery',journal:'Health Journal',reminders:'Reminders'};
+
+function goPanel(name, btn) {
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('panel-'+name).classList.add('active');
+  if (btn) btn.classList.add('active');
+  else { document.querySelectorAll('.nav-item').forEach(n=>{ if(n.textContent.toLowerCase().includes(TITLES[name]?.toLowerCase().split(' ')[0]||'x')) n.classList.add('active'); }); }
+  document.getElementById('topbarTitle').textContent = TITLES[name]||name;
+  renderPanel(name);
+  if (window.innerWidth < 750) closeSidebar();
+}
+
+function renderPanel(name) {
+  const pid = db.activePet;
+  switch(name) {
+    case 'dashboard':   renderDashboard(); break;
+    case 'profile':     renderProfile(); break;
+    case 'health':      renderVaccines(); break;
+    case 'medications': renderMeds(); break;
+    case 'weight':      renderWeight(); break;
+    case 'mood':        renderMoods(); break;
+    case 'carelogs':    renderCareLogs(); break;
+    case 'grooming':    renderGrooming(); break;
+    case 'nutrition':   renderNutrition(); break;
+    case 'training':    renderTraining(); break;
+    case 'appointments':renderAppointments(); break;
+    case 'expenses':    renderExpenses(); break;
+    case 'contacts':    renderContacts(); break;
+    case 'documents':   renderDocuments(); break;
+    case 'gallery':     renderGallery(); break;
+    case 'journal':     renderJournal(); break;
+    case 'reminders':   renderReminders(); break;
+  }
+}
+
+// ── SIDEBAR ──
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('sidebarOverlay').classList.toggle('open');}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sidebarOverlay').classList.remove('open');}
+
+// ══════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════
+function pid() { return db.activePet; }
+function pdata(key) { return db[key][pid()] || []; }
+function fmtDate(s){if(!s)return'—';return new Date(s+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});}
+function fmtDT(s){const d=new Date(s);return d.toLocaleDateString('en-US',{month:'short',day:'numeric'})+' · '+d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});}
+function today(){return new Date().toISOString().split('T')[0];}
+function currency(){return {USD:'$',GBP:'£',EUR:'€',AUD:'A$',CAD:'C$'}[db.settings.currency]||'$';}
+function vacStatus(next){if(!next)return'done';const d=(new Date(next)-new Date())/86400000;return d<0?'overdue':d<30?'due':'done';}
+const RICONS={vet:'🩺',vaccine:'💉',groom:'✂️',med:'💊',food:'🥣',training:'🏋️',other:'📌'};
+const RCOLORS={vet:{bg:'rgba(74,127,168,0.12)',col:'var(--sky)'},vaccine:{bg:'rgba(74,124,95,0.12)',col:'var(--sage)'},groom:{bg:'rgba(196,104,90,0.1)',col:'var(--rose)'},med:{bg:'rgba(122,104,168,0.15)',col:'var(--lav)'},food:{bg:'rgba(196,154,60,0.12)',col:'var(--amber)'},other:{bg:'rgba(26,17,8,0.06)',col:'var(--ink2)'}};
+const CARE_TYPES=[{id:'feeding',label:'🍖 Feeding'},{id:'walk',label:'🦮 Walk'},{id:'grooming',label:'✂️ Grooming'},{id:'vet',label:'🩺 Vet'},{id:'play',label:'🎾 Play'},{id:'bath',label:'🛁 Bath'},{id:'training',label:'🏋️ Training'},{id:'medication',label:'💊 Medication'},{id:'note',label:'📝 Note'}];
+const GROOM_EMOJIS=['🛁','✂️','🪮','👂','🦷','👁️','🐾','💅','🧴','🧼','🪥','💈','🫧'];
+const PET_EMOJIS=['🐶','🐱','🐰','🐹','🦜','🐠','🐢','🐍','🦎','🐴','🐑','🐈','🦊','🐇','🦔'];
+let selGroomEmoji='🛁', selPetEmoji='🐱', selCareType='feeding', selMoodEmoji=null;
+
+function empty(msg='Nothing added yet.'){return`<div class="empty"><span class="empty-icon">🐾</span><p class="empty-text">${msg}</p></div>`;}
+
+// ══════════════════════════════════════════
+// SIDEBAR PET LIST
+// ══════════════════════════════════════════
+function renderSidebarPets() {
+  const el = document.getElementById('sidebarPetList');
+  if (!db.pets.length) { el.innerHTML='<div style="font-size:12px;color:rgba(255,255,255,0.3);padding:8px;">No pets yet</div>'; return; }
+  el.innerHTML = db.pets.map(p=>`
+    <div class="sidebar-pet-item ${p.id===pid()?'active':''}" onclick="switchPet('${p.id}')">
+      <div class="sidebar-pet-avatar" style="background:${p.id===pid()?'rgba(196,154,60,0.15)':'rgba(255,255,255,0.06)'}">${p.emoji}</div>
+      <div style="flex:1;min-width:0;"><div class="sidebar-pet-name">${p.name}</div><div class="sidebar-pet-species">${p.species||p.breed||'Pet'}</div></div>
+      <button class="sidebar-pet-del" onclick="delPet('${p.id}',event)" title="Remove">✕</button>
+    </div>`).join('');
+  // Update name in header
+  document.getElementById('dashGreetName').textContent = db.settings.name || 'Pet Lover';
+  document.getElementById('ownerNameDisplay').textContent = db.settings.name || 'Pet Owner';
+}
+
+function switchPet(id) {
+  db.activePet = id;
+  save();
+  renderSidebarPets();
+  const activePanelEl = document.querySelector('.panel.active');
+  if (activePanelEl) renderPanel(activePanelEl.id.replace('panel-',''));
+}
+
+function delPet(id, e) {
+  e.stopPropagation();
+  const btn = e.currentTarget;
+  if (btn.dataset.c==='1') {
+    db.pets = db.pets.filter(p=>p.id!==id);
+    if (db.activePet===id) db.activePet = db.pets[0]?.id||null;
+    ['vaccines','weights','meds','meals','grooming','moods','carelogs','training','appointments','expenses','contacts','documents','gallery','journal','reminders'].forEach(k=>{ delete db[k][id]; });
+    save(); renderSidebarPets(); renderDashboard();
+  } else { btn.dataset.c='1'; btn.textContent='?'; setTimeout(()=>{btn.dataset.c='0';btn.textContent='✕';},2500); }
+}
+
+// ══════════════════════════════════════════
+// DASHBOARD
+// ══════════════════════════════════════════
+function renderDashboard() {
+  if (!pid()) { document.getElementById('panel-dashboard').innerHTML='<div class="card"><p style="text-align:center;padding:40px;color:#8a7a68;font-style:italic;">Add a pet to get started!</p></div>'; return; }
+  // KPIs
+  const vacs = pdata('vaccines'), meds = pdata('meds'), groom = pdata('grooming'), appts = pdata('appointments'), rems = pdata('reminders'), exps = pdata('expenses');
+  const vacDone = vacs.filter(v=>vacStatus(v.next)==='done').length;
+  document.getElementById('kpiVac').textContent = vacDone;
+  document.getElementById('kpiMed').textContent = meds.length;
+  document.getElementById('kpiGroom').textContent = groom.length;
+  document.getElementById('kpiAppt').textContent = appts.filter(a=>new Date(a.date)>=new Date()).length;
+  document.getElementById('kpiVacDelta').textContent = vacs.some(v=>vacStatus(v.next)==='overdue')?'⚠ Overdue vaccines!':'✓ All current';
+  document.getElementById('kpiGroomDelta').textContent = groom.filter(g=>g.status==='overdue').length+' overdue';
+  // Stat bar
+  const logs = pdata('carelogs');
+  document.getElementById('dsPets').textContent = db.pets.length;
+  document.getElementById('dsLogs').textContent = logs.length;
+  document.getElementById('dsAppts').textContent = appts.length;
+  document.getElementById('dsReminders').textContent = rems.length;
+  document.getElementById('dashSubtitle').textContent = rems.length+' reminders scheduled';
+  // Reminders widget
+  const remEl = document.getElementById('dashReminders');
+  const upcoming = [...rems].sort((a,b)=>new Date(a.date)-new Date(b.date)).slice(0,4);
+  remEl.innerHTML = upcoming.length ? upcoming.map(r=>{const d=new Date(r.date+'T00:00:00'),c=RCOLORS[r.type]||RCOLORS.other;return`<div class="appt-item"><div class="appt-date-box" style="background:${c.bg};"><div class="appt-day" style="color:${c.col};">${d.getDate()}</div><div class="appt-mon" style="color:${c.col};">${d.toLocaleString('en',{month:'short'})}</div></div><div style="flex:1;"><div class="appt-title">${RICONS[r.type]||'📌'} ${r.title}</div><div class="appt-sub">${r.note||r.type}</div></div><button class="btn-xs" onclick="delReminder('${r.id}')">✕</button></div>`;}).join('') : empty('No reminders set');
+  // Appts widget
+  const apptEl = document.getElementById('dashAppts');
+  const upAppts = [...appts].sort((a,b)=>new Date(a.date)-new Date(b.date)).filter(a=>new Date(a.date)>=new Date()).slice(0,3);
+  apptEl.innerHTML = upAppts.length ? upAppts.map(a=>{const d=new Date(a.date+'T00:00:00'),c=RCOLORS[a.type]||RCOLORS.other;return`<div class="appt-item"><div class="appt-date-box" style="background:${c.bg};"><div class="appt-day" style="color:${c.col};">${d.getDate()}</div><div class="appt-mon" style="color:${c.col};">${d.toLocaleString('en',{month:'short'})}</div></div><div style="flex:1;"><div class="appt-title">${a.title}</div><div class="appt-sub">${a.location||a.type} · ${a.time||''}</div></div></div>`;}).join('') : empty('No upcoming appointments');
+  // Care logs
+  const clEl = document.getElementById('dashCareLogs');
+  const recentLogs = [...logs].sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,4);
+  clEl.innerHTML = recentLogs.length ? recentLogs.map(l=>{const ct=CARE_TYPES.find(c=>c.id===l.type)||CARE_TYPES[8];return`<div class="list-item"><div class="item-icon" style="background:rgba(74,124,95,0.12);">${ct.label.split(' ')[0]}</div><div class="item-main"><div class="item-title">${ct.label.split(' ').slice(1).join(' ')}</div><div class="item-sub">${fmtDT(l.date)}${l.amount?' · '+l.amount:''}</div></div></div>`;}).join('') : empty('No care logs yet');
+  // Expenses
+  const expEl = document.getElementById('dashExpenses');
+  const thisMonth = exps.filter(e=>new Date(e.date).getMonth()===new Date().getMonth());
+  const total = thisMonth.reduce((s,e)=>s+e.amt,0);
+  const budget = db.settings.budget||15000;
+  const pct = Math.min(100,Math.round(total/budget*100));
+  expEl.innerHTML = thisMonth.length ? thisMonth.slice(-3).reverse().map(e=>`<div class="expense-row"><div class="exp-cat" style="background:rgba(196,154,60,0.1);">${{vet:'🩺',food:'🥣',groom:'✂️',toys:'🪀',med:'💊',insurance:'🛡️',boarding:'🏠',other:'📌'}[e.cat]||'📌'}</div><div style="flex:1;"><div class="exp-title">${e.desc}</div><div class="exp-sub">${fmtDate(e.date)}</div></div><div class="exp-amount neg">${currency()}${e.amt.toLocaleString()}</div></div>`).join('') : empty('No expenses this month');
+  document.getElementById('budgetPct').textContent = `${currency()}${total.toLocaleString()} / ${currency()}${budget.toLocaleString()}`;
+  document.getElementById('budgetBar').style.width = pct+'%';
+  document.getElementById('budgetBar').style.background = pct>90?'linear-gradient(90deg,var(--rose),var(--rose2))':pct>70?'linear-gradient(90deg,var(--amber),var(--gold))':'linear-gradient(90deg,var(--sage),var(--sage2))';
+}
+
+// ══════════════════════════════════════════
+// PROFILE
+// ══════════════════════════════════════════
+function renderProfile() {
+  const pet = db.pets.find(p=>p.id===pid());
+  if (!pet) { document.getElementById('profileContent').innerHTML=empty('No pet selected'); return; }
+  const el = document.getElementById('profileContent');
+  el.innerHTML = `
+  <div class="pet-profile-hd">
+    <div class="pet-profile-avatar" id="profileAvatar">${pet.emoji}</div>
+    <div class="pet-profile-info" style="flex:1;">
+      <h2 id="profileName">${pet.name}</h2>
+      <p>${pet.species||''} ${pet.breed?'· '+pet.breed:''} ${pet.gender?'· '+pet.gender:''}</p>
+      <div class="pet-profile-chips">
+        ${pet.age?`<span class="pchip">🎂 ${pet.age}</span>`:''}
+        ${pet.weight?`<span class="pchip">⚖️ ${pet.weight}kg</span>`:''}
+        ${pet.color?`<span class="pchip">🎨 ${pet.color}</span>`:''}
+        ${pet.chip?`<span class="pchip">💡 ${pet.chip}</span>`:''}
+      </div>
+    </div>
+    <div class="pet-profile-edit"><button class="btn btn-ghost btn-sm" onclick="openEditPetModal()">✏️ Edit Profile</button></div>
+  </div>
+  <div class="dash-three">
+    <div class="card"><div class="card-hd-title" style="font-size:14px;margin-bottom:12px;font-family:'Cormorant Garamond',serif;">🐾 Basic Info</div>
+      ${profileRow('Species',pet.species)}
+      ${profileRow('Breed',pet.breed)}
+      ${profileRow('Age',pet.age)}
+      ${profileRow('Date of Birth',fmtDate(pet.dob))}
+      ${profileRow('Gender',pet.gender)}
+    </div>
+    <div class="card"><div class="card-hd-title" style="font-size:14px;margin-bottom:12px;font-family:'Cormorant Garamond',serif;">🏥 Health Info</div>
+      ${profileRow('Weight',pet.weight+'kg')}
+      ${profileRow('Colour / Markings',pet.color)}
+      ${profileRow('Microchip ID',pet.chip)}
+      ${profileRow('Primary Vet',pet.vet)}
+    </div>
+    <div class="card"><div class="card-hd-title" style="font-size:14px;margin-bottom:12px;font-family:'Cormorant Garamond',serif;">📝 Notes</div>
+      <p style="font-size:13px;color:#5a4a38;line-height:1.7;font-style:italic;">${pet.notes||'No special notes.'}</p>
+    </div>
+  </div>`;
+}
+function profileRow(label,val){return val?`<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border2);"><span style="font-size:11px;font-weight:600;color:#8a7a68;text-transform:uppercase;letter-spacing:1px;">${label}</span><span style="font-size:13px;color:var(--ink);font-weight:500;">${val}</span></div>`:''; }
+
+// ══════════════════════════════════════════
+// VACCINES
+// ══════════════════════════════════════════
+function renderVaccines() {
+  const el=document.getElementById('vaccineList');
+  const vacs=pdata('vaccines');
+  if(!vacs.length){el.innerHTML=empty('No vaccines recorded yet.');return;}
+  const bm={done:'badge-sage',due:'badge-gold',overdue:'badge-rose'},lm={done:'✓ Up to date',due:'Due soon',overdue:'Overdue'};
+  el.innerHTML=vacs.map(v=>{const st=vacStatus(v.next);return`<div class="vac-item"><div class="vac-dot" style="background:${st==='done'?'var(--sage)':st==='due'?'var(--gold)':'var(--rose)'};box-shadow:0 0 0 3px ${st==='done'?'rgba(74,124,95,0.15)':st==='due'?'rgba(196,154,60,0.15)':'rgba(196,104,90,0.15)'};"></div><div style="flex:1;"><div class="vac-name">${v.name}</div><div class="vac-dates">Given: ${fmtDate(v.date)} · Next: ${fmtDate(v.next)} · ${v.vet||''}</div></div><span class="badge ${bm[st]}">${lm[st]}</span><button class="btn-xs" onclick="delVaccine(${v.id})" style="margin-left:8px;">✕</button></div>`;}).join('');
+}
+function addVaccine(){const n=document.getElementById('vacName').value.trim(),d=document.getElementById('vacDate').value,nx=document.getElementById('vacNext').value,vt=document.getElementById('vacVet').value.trim();if(!n)return;if(!db.vaccines[pid()])db.vaccines[pid()]=[];db.vaccines[pid()].push({id:Date.now(),name:n,date:d,next:nx,vet:vt,status:'done'});save();renderVaccines();['vacName','vacDate','vacNext','vacVet'].forEach(i=>document.getElementById(i).value='');}
+function delVaccine(id){db.vaccines[pid()]=pdata('vaccines').filter(v=>v.id!==id);save();renderVaccines();}
+
+// ══════════════════════════════════════════
+// MEDICATIONS
+// ══════════════════════════════════════════
+function renderMeds(){
+  const el=document.getElementById('medList');
+  const meds=pdata('meds');
+  if(!meds.length){el.innerHTML=empty('No medications added.');return;}
+  el.innerHTML=meds.map(m=>`<div class="list-item"><div class="item-icon" style="background:rgba(122,104,168,0.15);">💊</div><div class="item-main"><div class="item-title">${m.name}</div><div class="item-sub">${m.dose} · ${m.freq} · By ${m.doc||'N/A'}</div></div><div class="item-right"><span class="badge badge-lav">${fmtDate(m.end)||'Ongoing'}</span><button class="btn-xs" onclick="delMed(${m.id})">✕</button></div></div>`).join('');
+}
+function addMed(){const n=document.getElementById('medName').value.trim(),d=document.getElementById('medDose').value.trim(),f=document.getElementById('medFreq').value,s=document.getElementById('medStart').value,e=document.getElementById('medEnd').value,doc=document.getElementById('medDoc').value.trim();if(!n)return;if(!db.meds[pid()])db.meds[pid()]=[];db.meds[pid()].push({id:Date.now(),name:n,dose:d,freq:f,start:s,end:e,doc});save();renderMeds();['medName','medDose','medStart','medEnd','medDoc'].forEach(i=>document.getElementById(i).value='');}
+function delMed(id){db.meds[pid()]=pdata('meds').filter(m=>m.id!==id);save();renderMeds();}
+
+// ══════════════════════════════════════════
+// WEIGHT
+// ══════════════════════════════════════════
+function renderWeight(){
+  const weights=pdata('weights');
+  const listEl=document.getElementById('weightList');
+  listEl.innerHTML=weights.length?[...weights].sort((a,b)=>new Date(b.date)-new Date(a.date)).map(w=>`<div class="list-item"><div class="item-icon" style="background:rgba(196,154,60,0.12);">⚖️</div><div class="item-main"><div class="item-title">${w.val}${db.settings.weightUnit||'kg'}</div><div class="item-sub">${fmtDate(w.date)}${w.bcs?' · BCS: '+w.bcs+'/9':''}${w.note?' · '+w.note:''}</div></div><button class="btn-xs" onclick="delWeight(${w.id})">✕</button></div>`).join(''):empty('No weight logged yet.');
+  // SVG chart
+  const svg=document.getElementById('weightChart');
+  if(weights.length<2){svg.innerHTML='<text x="180" y="65" text-anchor="middle" fill="#b8a898" font-size="12" font-family="DM Sans,sans-serif">Add at least 2 entries to see chart</text>';return;}
+  const sorted=[...weights].sort((a,b)=>new Date(a.date)-new Date(b.date));
+  const vals=sorted.map(w=>parseFloat(w.val)),minV=Math.min(...vals)-0.5,maxV=Math.max(...vals)+0.5;
+  const W=360,H=120,pad=20;
+  const pts=sorted.map((w,i)=>[pad+(i/(sorted.length-1))*(W-2*pad),H-pad-((w.val-minV)/(maxV-minV))*(H-2*pad)]);
+  const pathD=pts.map((p,i)=>(i===0?`M${p[0]},${p[1]}`:`L${p[0]},${p[1]}`)).join('');
+  const areaD=`M${pts[0][0]},${H} `+pts.map(p=>`L${p[0]},${p[1]}`).join(' ')+` L${pts[pts.length-1][0]},${H} Z`;
+  svg.innerHTML=`<defs><linearGradient id="wg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#c49a3c" stop-opacity="0.2"/><stop offset="100%" stop-color="#c49a3c" stop-opacity="0"/></linearGradient></defs><path d="${areaD}" fill="url(#wg)"/><path d="${pathD}" fill="none" stroke="#c49a3c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>${pts.map((p,i)=>`<circle cx="${p[0]}" cy="${p[1]}" r="4" fill="#c49a3c"/><text x="${p[0]}" y="${p[1]-8}" text-anchor="middle" fill="#8a6a58" font-size="10" font-family="DM Sans,sans-serif">${vals[i]}</text>`).join('')}`;
+}
+function addWeight(){const v=parseFloat(document.getElementById('wVal').value),d=document.getElementById('wDate').value,bcs=document.getElementById('wBCS').value,n=document.getElementById('wNote').value.trim();if(!v||!d)return;if(!db.weights[pid()])db.weights[pid()]=[];db.weights[pid()].push({id:Date.now(),val:v,date:d,bcs:bcs,note:n});save();renderWeight();['wVal','wBCS','wNote'].forEach(i=>document.getElementById(i).value='');}
+function delWeight(id){db.weights[pid()]=pdata('weights').filter(w=>w.id!==id);save();renderWeight();}
+
+// ══════════════════════════════════════════
+// MOOD
+// ══════════════════════════════════════════
+function selMood(e,b){selMoodEmoji=e;document.querySelectorAll('.mood-btn').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');}
+function logMood(){
+  if(!selMoodEmoji)return;
+  if(!db.moods[pid()])db.moods[pid()]=[];
+  db.moods[pid()].push({id:Date.now(),emoji:selMoodEmoji,energy:document.getElementById('moodEnergy').value,appetite:document.getElementById('moodAppetite').value,note:document.getElementById('moodNote').value.trim(),date:new Date().toISOString()});
+  save();renderMoods();
+  document.getElementById('moodNote').value='';selMoodEmoji=null;document.querySelectorAll('.mood-btn').forEach(b=>b.classList.remove('sel'));
+}
+function renderMoods(){
+  const el=document.getElementById('moodList');
+  const moods=pdata('moods');
+  if(!moods.length){el.innerHTML=empty('No moods logged yet.');return;}
+  el.innerHTML=[...moods].reverse().map(m=>`<div class="list-item"><div class="item-icon" style="background:rgba(196,104,90,0.08);font-size:20px;">${m.emoji}</div><div class="item-main"><div class="item-title">${m.note||'No note'}</div><div class="item-sub">${fmtDT(m.date)}${m.energy?' · '+m.energy:''}${m.appetite?' · '+m.appetite:''}</div></div><button class="btn-xs" onclick="delMood(${m.id})">✕</button></div>`).join('');
+}
+function delMood(id){db.moods[pid()]=pdata('moods').filter(m=>m.id!==id);save();renderMoods();}
+
+// ══════════════════════════════════════════
+// CARE LOGS
+// ══════════════════════════════════════════
+function buildCareTypeRow(){const el=document.getElementById('careTypeRow');el.innerHTML=CARE_TYPES.map(c=>`<div class="care-type-chip ${c.id===selCareType?'active':''}" onclick="selCT('${c.id}',this)">${c.label}</div>`).join('');}
+function selCT(id,el){selCareType=id;document.querySelectorAll('.care-type-chip').forEach(c=>c.classList.remove('active'));el.classList.add('active');}
+function addCareLog(){
+  if(!db.carelogs[pid()])db.carelogs[pid()]=[];
+  const d=document.getElementById('logDate').value,t=document.getElementById('logTime').value;
+  db.carelogs[pid()].push({id:Date.now(),type:selCareType,date:d&&t?new Date(d+'T'+t+':00').toISOString():new Date().toISOString(),amount:document.getElementById('logAmount').value.trim(),by:document.getElementById('logBy').value.trim(),note:document.getElementById('logNote').value.trim()});
+  save();renderCareLogs();
+  ['logAmount','logBy','logNote'].forEach(i=>document.getElementById(i).value='');
+}
+function renderCareLogs(){
+  const el=document.getElementById('careLogList');
+  const logs=pdata('carelogs');
+  if(!logs.length){el.innerHTML=empty('No care logs yet.');return;}
+  el.innerHTML=[...logs].sort((a,b)=>new Date(b.date)-new Date(a.date)).map(l=>{const ct=CARE_TYPES.find(c=>c.id===l.type)||CARE_TYPES[8];return`<div class="list-item"><div class="item-icon" style="background:rgba(74,124,95,0.1);">${ct.label.split(' ')[0]}</div><div class="item-main"><div class="item-title">${ct.label.split(' ').slice(1).join(' ')}${l.amount?' — '+l.amount:''}</div><div class="item-sub">${fmtDT(l.date)}${l.by?' · By '+l.by:''}${l.note?' · "'+l.note+'"':''}</div></div><button class="btn-xs" onclick="delCareLog(${l.id})">✕</button></div>`;}).join('');
+}
+function delCareLog(id){db.carelogs[pid()]=pdata('carelogs').filter(l=>l.id!==id);save();renderCareLogs();}
+
+// ══════════════════════════════════════════
+// GROOMING
+// ══════════════════════════════════════════
+function buildGroomEmojiPick(){
+  const el=document.getElementById('groomEmojiPick');
+  el.innerHTML=GROOM_EMOJIS.map(e=>`<div class="epick-btn ${e===selGroomEmoji?'sel':''}" onclick="selGE('${e}',this)">${e}</div>`).join('');
+}
+function selGE(e,b){selGroomEmoji=e;document.querySelectorAll('#groomEmojiPick .epick-btn').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');}
+function addGroomTask(){const n=document.getElementById('groomTaskName').value.trim(),f=document.getElementById('groomTaskFreq').value.trim(),s=document.getElementById('groomTaskStatus').value,a=document.getElementById('groomAssigned').value.trim();if(!n)return;if(!db.grooming[pid()])db.grooming[pid()]=[];db.grooming[pid()].push({id:Date.now(),emoji:selGroomEmoji,name:n,freq:f||'As needed',status:s,assigned:a});save();renderGrooming();['groomTaskName','groomTaskFreq','groomAssigned'].forEach(i=>document.getElementById(i).value='');}
+function cycleGroomStatus(id){const t=pdata('grooming').find(t=>t.id===id);if(!t)return;const c=['upcoming','soon','overdue'];t.status=c[(c.indexOf(t.status)+1)%c.length];save();renderGrooming();}
+function delGroomTask(id){db.grooming[pid()]=pdata('grooming').filter(t=>t.id!==id);save();renderGrooming();}
+function renderGrooming(){
+  const el=document.getElementById('groomGrid');
+  const tasks=pdata('grooming');
+  if(!tasks.length){el.innerHTML='<div style="grid-column:1/-1;">'+empty('No grooming tasks added.')+'</div>';return;}
+  const lbl={upcoming:'Upcoming',soon:'Due soon',overdue:'Overdue'};
+  const sc={upcoming:{bg:'rgba(74,124,95,0.12)',col:'var(--sage)'},soon:{bg:'rgba(196,154,60,0.12)',col:'var(--amber)'},overdue:{bg:'rgba(196,104,90,0.1)',col:'var(--rose)'}};
+  el.innerHTML=tasks.map(t=>`<div class="groom-card"><button class="groom-del" onclick="delGroomTask(${t.id})">✕</button><span class="groom-em">${t.emoji}</span><div class="groom-name">${t.name}</div><div class="groom-freq">${t.freq}${t.assigned?' · '+t.assigned:''}</div><span class="groom-due" style="background:${sc[t.status].bg};color:${sc[t.status].col};" onclick="cycleGroomStatus(${t.id})">${lbl[t.status]}</span></div>`).join('');
+  buildGroomEmojiPick();
+}
+
+// ══════════════════════════════════════════
+// NUTRITION
+// ══════════════════════════════════════════
+const MTIME_STYLE={morning:{bg:'rgba(196,154,60,0.12)',col:'var(--amber)'},noon:{bg:'rgba(74,124,95,0.12)',col:'var(--sage)'},afternoon:{bg:'rgba(74,127,168,0.12)',col:'var(--sky)'},evening:{bg:'rgba(196,104,90,0.1)',col:'var(--rose)'},night:{bg:'rgba(26,17,8,0.08)',col:'var(--ink2)'}};
+function addMeal(){const t=document.getElementById('mealTime').value,n=document.getElementById('mealName').value.trim(),a=document.getElementById('mealAmt').value.trim(),c=parseInt(document.getElementById('mealCal').value)||0;if(!n)return;if(!db.meals[pid()])db.meals[pid()]=[];db.meals[pid()].push({id:Date.now(),time:t,name:n,amt:a,cal:c});save();renderNutrition();['mealName','mealAmt','mealCal'].forEach(i=>document.getElementById(i).value='');}
+function delMeal(id){db.meals[pid()]=pdata('meals').filter(m=>m.id!==id);save();renderNutrition();}
+function renderNutrition(){
+  const el=document.getElementById('mealList');
+  const meals=pdata('meals');
+  const order=['morning','noon','afternoon','evening','night'];
+  const sorted=[...meals].sort((a,b)=>order.indexOf(a.time)-order.indexOf(b.time));
+  el.innerHTML=sorted.length?sorted.map(m=>{const s=MTIME_STYLE[m.time]||MTIME_STYLE.morning;return`<div class="meal-slot"><span class="meal-time-pill" style="background:${s.bg};color:${s.col};">${m.time.charAt(0).toUpperCase()+m.time.slice(1)}</span><span class="meal-desc">${m.name}</span><span class="meal-qty">${m.amt}${m.cal?' · '+m.cal+'kcal':''}</span><button class="btn-xs" onclick="delMeal(${m.id})" style="margin-left:6px;">✕</button></div>`;}).join(''):empty('No meals planned yet.');
+  // Summary
+  const totalCal=meals.reduce((s,m)=>s+(m.cal||0),0);
+  document.getElementById('nutritionSummary').innerHTML=`
+    <div class="list-item"><div class="item-icon" style="background:rgba(196,154,60,0.12);">🔥</div><div class="item-main"><div class="item-title">Total Daily Calories</div><div class="item-sub">All meals combined</div></div><div class="item-right"><span class="badge badge-gold">${totalCal} kcal</span></div></div>
+    <div class="list-item"><div class="item-icon" style="background:rgba(74,124,95,0.12);">🥣</div><div class="item-main"><div class="item-title">Meals Per Day</div></div><div class="item-right"><span class="badge badge-sage">${meals.length} meals</span></div></div>
+    ${meals.length?`<div class="prog-wrap" style="margin-top:12px;"><div class="prog-row"><span>Calorie Target (400 kcal)</span><span>${Math.min(100,Math.round(totalCal/400*100))}%</span></div><div class="prog-track"><div class="prog-fill" style="width:${Math.min(100,Math.round(totalCal/400*100))}%;background:linear-gradient(90deg,var(--sage),var(--sage2));"></div></div></div>`:''}`;
+}
+
+// ══════════════════════════════════════════
+// TRAINING
+// ══════════════════════════════════════════
+const PROG_STYLE={learning:{bg:'rgba(74,127,168,0.12)',col:'var(--sky)',label:'🌱 Learning'},improving:{bg:'rgba(196,154,60,0.12)',col:'var(--amber)',label:'📈 Improving'},mastered:{bg:'rgba(74,124,95,0.12)',col:'var(--sage)',label:'⭐ Mastered'},regressed:{bg:'rgba(196,104,90,0.1)',col:'var(--rose)',label:'📉 Needs work'}};
+function addTraining(){const c=document.getElementById('trainCmd').value.trim(),d=document.getElementById('trainDate').value,du=document.getElementById('trainDur').value.trim(),r=document.getElementById('trainReward').value.trim(),p=document.getElementById('trainProgress').value,n=document.getElementById('trainNote').value.trim();if(!c)return;if(!db.training[pid()])db.training[pid()]=[];db.training[pid()].push({id:Date.now(),cmd:c,date:d,dur:du,reward:r,progress:p,note:n});save();renderTraining();['trainCmd','trainDur','trainReward','trainNote'].forEach(i=>document.getElementById(i).value='');}
+function delTraining(id){db.training[pid()]=pdata('training').filter(t=>t.id!==id);save();renderTraining();}
+function renderTraining(){
+  const el=document.getElementById('trainingList');
+  const tr=pdata('training');
+  if(!tr.length){el.innerHTML=empty('No training sessions logged.');return;}
+  el.innerHTML=[...tr].reverse().map(t=>{const ps=PROG_STYLE[t.progress]||PROG_STYLE.learning;return`<div class="training-item"><div style="flex:1;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:3px;"><span style="font-size:13px;font-weight:600;color:var(--ink);">${t.cmd}</span><span class="badge" style="background:${ps.bg};color:${ps.col};">${ps.label}</span></div><div style="font-size:11px;color:#8a7a68;">${fmtDate(t.date)}${t.dur?' · '+t.dur:''}${t.reward?' · Reward: '+t.reward:''}</div>${t.note?`<div style="font-size:12px;color:#6a5a48;font-style:italic;margin-top:3px;">"${t.note}"</div>`:''}</div><button class="btn-xs" onclick="delTraining(${t.id})">✕</button></div>`;}).join('');
+}
+
+// ══════════════════════════════════════════
+// APPOINTMENTS
+// ══════════════════════════════════════════
+function addAppt(){const t=document.getElementById('apptTitle').value.trim(),d=document.getElementById('apptDate').value,ti=document.getElementById('apptTime').value,tp=document.getElementById('apptType').value,l=document.getElementById('apptLocation').value.trim(),c=parseFloat(document.getElementById('apptCost').value)||0,n=document.getElementById('apptNote').value.trim();if(!t||!d)return;if(!db.appointments[pid()])db.appointments[pid()]=[];db.appointments[pid()].push({id:Date.now(),title:t,date:d,time:ti,type:tp,location:l,cost:c,note:n});save();renderAppointments();['apptTitle','apptDate','apptTime','apptLocation','apptCost','apptNote'].forEach(i=>document.getElementById(i).value='');}
+function delAppt(id){db.appointments[pid()]=pdata('appointments').filter(a=>a.id!==id);save();renderAppointments();}
+function renderAppointments(){
+  const el=document.getElementById('apptList');
+  const appts=pdata('appointments');
+  if(!appts.length){el.innerHTML=empty('No appointments scheduled.');return;}
+  const sorted=[...appts].sort((a,b)=>new Date(a.date)-new Date(b.date));
+  el.innerHTML=sorted.map(a=>{const d=new Date(a.date+'T00:00:00'),c=RCOLORS[a.type]||RCOLORS.other,past=new Date(a.date)<new Date();return`<div class="appt-item" style="${past?'opacity:0.6':''}"><div class="appt-date-box" style="background:${c.bg};border-radius:11px;"><div class="appt-day" style="color:${c.col};">${d.getDate()}</div><div class="appt-mon" style="color:${c.col};">${d.toLocaleString('en',{month:'short'})}</div></div><div style="flex:1;"><div class="appt-title">${RICONS[a.type]||'📌'} ${a.title}${past?' <span style="font-size:10px;color:#8a7a68;">(past)</span>':''}</div><div class="appt-sub">${a.location||''} ${a.time?'· '+a.time:''}${a.cost?' · '+currency()+a.cost.toLocaleString():''}</div>${a.note?`<div style="font-size:11px;color:#8a7a68;font-style:italic;margin-top:2px;">${a.note}</div>`:''}</div><button class="btn-xs" onclick="delAppt(${a.id})">✕</button></div>`;}).join('');
+}
+
+// ══════════════════════════════════════════
+// EXPENSES
+// ══════════════════════════════════════════
+const EXP_ICONS={vet:'🩺',food:'🥣',groom:'✂️',toys:'🪀',med:'💊',insurance:'🛡️',boarding:'🏠',other:'📌'};
+function addExpense(){const d=document.getElementById('expDesc').value.trim(),a=parseFloat(document.getElementById('expAmt').value),c=document.getElementById('expCat').value,dt=document.getElementById('expDate').value,bg=parseFloat(document.getElementById('expBudget').value);if(!d||!a)return;if(bg) db.settings.budget=bg;if(!db.expenses[pid()])db.expenses[pid()]=[];db.expenses[pid()].push({id:Date.now(),desc:d,amt:a,cat:c,date:dt||today()});save();renderExpenses();['expDesc','expAmt','expDate','expBudget'].forEach(i=>document.getElementById(i).value='');}
+function delExpense(id){db.expenses[pid()]=pdata('expenses').filter(e=>e.id!==id);save();renderExpenses();}
+function renderExpenses(){
+  const el=document.getElementById('expenseList');
+  const exps=pdata('expenses');
+  if(!exps.length){el.innerHTML=empty('No expenses recorded.');return;}
+  el.innerHTML=[...exps].sort((a,b)=>new Date(b.date)-new Date(a.date)).map(e=>`<div class="expense-row"><div class="exp-cat" style="background:rgba(196,154,60,0.1);">${EXP_ICONS[e.cat]||'📌'}</div><div style="flex:1;"><div class="exp-title">${e.desc}</div><div class="exp-sub">${fmtDate(e.date)} · ${e.cat}</div></div><div class="exp-amount neg">${currency()}${e.amt.toLocaleString()}</div><button class="btn-xs" onclick="delExpense(${e.id})" style="margin-left:6px;">✕</button></div>`).join('');
+  // Summary by category
+  const cats={};exps.forEach(e=>{cats[e.cat]=(cats[e.cat]||0)+e.amt;});
+  const total=exps.reduce((s,e)=>s+e.amt,0);
+  const budget=db.settings.budget||15000;
+  const thisMonth=exps.filter(e=>new Date(e.date).getMonth()===new Date().getMonth()).reduce((s,e)=>s+e.amt,0);
+  document.getElementById('expSummary').innerHTML=`
+    <div class="list-item"><div class="item-icon" style="background:rgba(196,104,90,0.1);">💸</div><div class="item-main"><div class="item-title">Total All Time</div></div><div class="item-right"><span class="badge badge-rose">${currency()}${total.toLocaleString()}</span></div></div>
+    <div class="list-item"><div class="item-icon" style="background:rgba(196,154,60,0.12);">📅</div><div class="item-main"><div class="item-title">This Month</div></div><div class="item-right"><span class="badge badge-gold">${currency()}${thisMonth.toLocaleString()}</span></div></div>
+    <div class="prog-wrap" style="margin-top:8px;"><div class="prog-row"><span>Budget: ${currency()}${budget.toLocaleString()}</span><span>${Math.min(100,Math.round(thisMonth/budget*100))}%</span></div><div class="prog-track"><div class="prog-fill" style="width:${Math.min(100,Math.round(thisMonth/budget*100))}%;background:${thisMonth>budget*0.9?'linear-gradient(90deg,var(--rose),var(--rose2))':'linear-gradient(90deg,var(--sage),var(--sage2))'}"></div></div></div>
+    ${Object.entries(cats).slice(0,4).map(([k,v])=>`<div style="display:flex;justify-content:space-between;font-size:12px;padding:5px 0;border-bottom:1px solid var(--border2);"><span>${EXP_ICONS[k]||'📌'} ${k.charAt(0).toUpperCase()+k.slice(1)}</span><span style="font-weight:600;">${currency()}${v.toLocaleString()}</span></div>`).join('')}`;
+}
+
+// ══════════════════════════════════════════
+// CONTACTS
+// ══════════════════════════════════════════
+function addContact(){const n=document.getElementById('cName').value.trim(),r=document.getElementById('cRole').value.trim(),p=document.getElementById('cPhone').value.trim(),a=document.getElementById('cAddr').value.trim(),e=document.getElementById('cEmail').value.trim(),h=document.getElementById('cHours').value.trim();if(!n||!p)return;if(!db.contacts[pid()])db.contacts[pid()]=[];db.contacts[pid()].push({id:Date.now(),name:n,role:r,phone:p,addr:a,email:e,hours:h});save();renderContacts();['cName','cRole','cPhone','cAddr','cEmail','cHours'].forEach(i=>document.getElementById(i).value='');}
+function delContact(id){db.contacts[pid()]=pdata('contacts').filter(c=>c.id!==id);save();renderContacts();}
+function renderContacts(){
+  const el=document.getElementById('contactList');
+  const contacts=pdata('contacts');
+  if(!contacts.length){el.innerHTML=empty('No contacts added yet.');return;}
+  el.innerHTML=contacts.map(c=>`<div class="contact-card"><div class="contact-ava" style="background:rgba(74,127,168,0.12);">🧑‍⚕️</div><div style="flex:1;"><div class="contact-name">${c.name}</div><div class="contact-role">${c.role}${c.hours?' · '+c.hours:''}</div>${c.addr?`<div style="font-size:11px;color:#8a7a68;margin-top:2px;">📍 ${c.addr}</div>`:''}</div><div style="text-align:right;flex-shrink:0;"><div class="contact-ph">${c.phone}</div>${c.email?`<div style="font-size:10px;color:#8a7a68;">${c.email}</div>`:''}</div><button class="btn-xs" onclick="delContact(${c.id})" style="margin-left:8px;">✕</button></div>`).join('');
+}
+
+// ══════════════════════════════════════════
+// DOCUMENTS
+// ══════════════════════════════════════════
+const DOC_ICONS={pedigree:'📜',insurance:'🛡️',medical:'🏥',license:'📋',microchip:'💡',passport:'🌍',other:'📄'};
+function addDoc(){const n=document.getElementById('docName').value.trim(),t=document.getElementById('docType').value,d=document.getElementById('docDate').value,ex=document.getElementById('docExpiry').value,nt=document.getElementById('docNote').value.trim();if(!n)return;if(!db.documents[pid()])db.documents[pid()]=[];db.documents[pid()].push({id:Date.now(),name:n,type:t,date:d,expiry:ex,note:nt});save();renderDocuments();['docName','docDate','docExpiry','docNote'].forEach(i=>document.getElementById(i).value='');}
+function delDoc(id){db.documents[pid()]=pdata('documents').filter(d=>d.id!==id);save();renderDocuments();}
+function renderDocuments(){
+  const el=document.getElementById('docList');
+  const docs=pdata('documents');
+  if(!docs.length){el.innerHTML=empty('No documents added yet.');return;}
+  el.innerHTML=docs.map(d=>{const exp=d.expiry&&new Date(d.expiry)<new Date();return`<div class="doc-item"><div class="doc-icon" style="background:rgba(196,154,60,0.12);">${DOC_ICONS[d.type]||'📄'}</div><div style="flex:1;"><div style="font-size:13px;font-weight:600;color:var(--ink);">${d.name}</div><div style="font-size:11px;color:#8a7a68;">Issued: ${fmtDate(d.date)} · Expires: ${fmtDate(d.expiry)||'N/A'}${d.note?' · '+d.note:''}</div></div>${exp?'<span class="badge badge-rose">Expired</span>':'<span class="badge badge-sage">Valid</span>'}<button class="btn-xs" onclick="delDoc(${d.id})" style="margin-left:8px;">✕</button></div>`;}).join('');
+}
+
+// ══════════════════════════════════════════
+// GALLERY
+// ══════════════════════════════════════════
+function addGalleryItem(){const c=document.getElementById('galCaption').value.trim(),d=document.getElementById('galDate').value,e=document.getElementById('galEmoji').value||'🐾';if(!c)return;if(!db.gallery[pid()])db.gallery[pid()]=[];db.gallery[pid()].push({id:Date.now(),caption:c,date:d||today(),emoji:e});save();renderGallery();['galCaption','galDate','galEmoji'].forEach(i=>document.getElementById(i).value='');}
+function delGalleryItem(id){db.gallery[pid()]=pdata('gallery').filter(g=>g.id!==id);save();renderGallery();}
+function renderGallery(){
+  const el=document.getElementById('galleryGrid');
+  const items=pdata('gallery');
+  el.innerHTML=items.map(g=>`<div class="gallery-item" title="${g.caption} · ${fmtDate(g.date)}" onclick="delGalleryItem(${g.id})" style="flex-direction:column;gap:6px;padding:10px;background:linear-gradient(135deg,var(--parch2),var(--white));">
+    <span style="font-size:30px;">${g.emoji}</span>
+    <span style="font-size:9px;text-align:center;color:#8a7a68;line-height:1.3;">${g.caption.substring(0,30)}</span>
+    <span style="font-size:9px;color:#b8a898;">${fmtDate(g.date)}</span>
+  </div>`).join('')+'<div class="gallery-item gallery-add" onclick="document.getElementById(\'galCaption\').focus();goPanel(\'gallery\',null);">＋</div>';
+}
+
+// ══════════════════════════════════════════
+// JOURNAL
+// ══════════════════════════════════════════
+function addJournal(){const cat=document.getElementById('jCat'),text=document.getElementById('jText').value.trim();if(!text)return;if(!db.journal[pid()])db.journal[pid()]=[];db.journal[pid()].push({id:Date.now(),cat:cat.value,label:cat.options[cat.selectedIndex].text,text,date:new Date().toISOString()});save();renderJournal();document.getElementById('jText').value='';}
+function delJournal(id){db.journal[pid()]=pdata('journal').filter(j=>j.id!==id);save();renderJournal();}
+function renderJournal(){
+  const el=document.getElementById('journalList');
+  const entries=pdata('journal');
+  if(!entries.length){el.innerHTML=empty('No journal entries yet.');return;}
+  el.innerHTML=[...entries].reverse().map(j=>`<div class="note-card" style="--nc:${j.cat}"><div class="note-top"><span class="note-label">${j.label}</span><div style="display:flex;gap:8px;align-items:center;"><span class="note-date">${fmtDT(j.date)}</span><button class="btn-xs" onclick="delJournal(${j.id})">✕</button></div></div><div class="note-body">${j.text}</div></div>`).join('');
+}
+
+// ══════════════════════════════════════════
+// REMINDERS
+// ══════════════════════════════════════════
+function addReminder(){const t=document.getElementById('remTitle').value.trim(),d=document.getElementById('remDate').value,ti=document.getElementById('remTime').value,tp=document.getElementById('remType').value,n=document.getElementById('remNote').value.trim();if(!t||!d)return;if(!db.reminders[pid()])db.reminders[pid()]=[];db.reminders[pid()].push({id:Date.now(),title:t,date:d,time:ti,type:tp,note:n});save();renderReminders();['remTitle','remDate','remTime','remNote'].forEach(i=>document.getElementById(i).value='');}
+function delReminder(id){db.reminders[pid()]=pdata('reminders').filter(r=>r.id!==id);save();renderReminders();renderDashboard();}
+function renderReminders(){
+  const el=document.getElementById('reminderList');
+  const rems=pdata('reminders');
+  if(!rems.length){el.innerHTML=empty('No reminders set.');return;}
+  const sorted=[...rems].sort((a,b)=>new Date(a.date)-new Date(b.date));
+  el.innerHTML=sorted.map(r=>{const d=new Date(r.date+'T00:00:00'),c=RCOLORS[r.type]||RCOLORS.other,past=new Date(r.date)<new Date();return`<div class="sched-item" style="${past?'opacity:0.55':''}"><div class="sched-date-box" style="background:${c.bg};border-radius:11px;"><div class="sched-day" style="color:${c.col};">${d.getDate()}</div><div style="font-size:9px;color:${c.col};letter-spacing:1px;text-transform:uppercase;">${d.toLocaleString('en',{month:'short'})}</div></div><div class="sched-type">${RICONS[r.type]||'📌'}</div><div style="flex:1;"><div class="sched-title">${r.title}</div><div class="sched-sub">${r.time||''} ${r.note?'· '+r.note:''}</div></div><button class="btn-xs" onclick="delReminder(${r.id})">✕</button></div>`;}).join('');
+}
+
+// ══════════════════════════════════════════
+// MODALS
+// ══════════════════════════════════════════
+function openAddPetModal(){
+  // Build emoji picker
+  const ep=document.getElementById('petEmojiPick');
+  ep.innerHTML=PET_EMOJIS.map(e=>`<div class="epick-btn ${e===selPetEmoji?'sel':''}" onclick="selPE('${e}',this)">${e}</div>`).join('');
+  document.getElementById('addPetModal').classList.add('open');
+  setTimeout(()=>document.getElementById('newPetName').focus(),100);
+}
+function selPE(e,b){selPetEmoji=e;document.querySelectorAll('#petEmojiPick .epick-btn').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');}
+function savePet(){
+  const name=document.getElementById('newPetName').value.trim();if(!name)return;
+  const id='pet_'+Date.now();
+  db.pets.push({id,emoji:selPetEmoji,name,species:document.getElementById('newPetSpecies').value.trim(),breed:document.getElementById('newPetBreed').value.trim(),age:document.getElementById('newPetAge').value.trim(),weight:parseFloat(document.getElementById('newPetWeight').value)||null,gender:document.getElementById('newPetGender').value,chip:document.getElementById('newPetChip').value.trim(),dob:document.getElementById('newPetDOB').value,vet:document.getElementById('newPetVet').value.trim(),color:document.getElementById('newPetColor').value.trim(),notes:document.getElementById('newPetNotes').value.trim(),added:new Date().toISOString()});
+  if(!db.activePet) db.activePet=id;
+  save();
+  closeModal('addPetModal');
+  renderSidebarPets();
+  ['newPetName','newPetSpecies','newPetBreed','newPetAge','newPetWeight','newPetChip','newPetDOB','newPetVet','newPetColor','newPetNotes'].forEach(i=>document.getElementById(i).value='');
+  document.getElementById('newPetGender').value='';
+  renderDashboard();
+}
+
+function openEditPetModal(){
+  const pet=db.pets.find(p=>p.id===pid());if(!pet)return;
+  selPetEmoji=pet.emoji;
+  const ep=document.getElementById('petEmojiPick');
+  ep.innerHTML=PET_EMOJIS.map(e=>`<div class="epick-btn ${e===selPetEmoji?'sel':''}" onclick="selPE('${e}',this)">${e}</div>`).join('');
+  ['newPetName','newPetSpecies','newPetBreed','newPetAge','newPetChip','newPetVet','newPetColor','newPetNotes'].forEach(i=>{ const field=i.replace('newPet','').toLowerCase(); document.getElementById(i).value=pet[field]||''; });
+  document.getElementById('newPetWeight').value=pet.weight||'';
+  document.getElementById('newPetDOB').value=pet.dob||'';
+  document.getElementById('newPetGender').value=pet.gender||'';
+  // Override save to edit
+  const saveBtn=document.querySelector('#addPetModal button.btn-gold');
+  saveBtn.textContent='✓ Save Changes';
+  saveBtn.onclick=()=>updatePet(pet.id);
+  document.getElementById('addPetModal').classList.add('open');
+}
+function updatePet(id){
+  const pet=db.pets.find(p=>p.id===id);if(!pet)return;
+  Object.assign(pet,{emoji:selPetEmoji,name:document.getElementById('newPetName').value.trim()||pet.name,species:document.getElementById('newPetSpecies').value.trim(),breed:document.getElementById('newPetBreed').value.trim(),age:document.getElementById('newPetAge').value.trim(),weight:parseFloat(document.getElementById('newPetWeight').value)||pet.weight,gender:document.getElementById('newPetGender').value,chip:document.getElementById('newPetChip').value.trim(),dob:document.getElementById('newPetDOB').value,vet:document.getElementById('newPetVet').value.trim(),color:document.getElementById('newPetColor').value.trim(),notes:document.getElementById('newPetNotes').value.trim()});
+  save();closeModal('addPetModal');renderSidebarPets();renderProfile();
+  const saveBtn=document.querySelector('#addPetModal button.btn-gold');saveBtn.textContent='＋ Add Pet';saveBtn.onclick=savePet;
+}
+
+function openSettingsModal(){
+  document.getElementById('settName').value=db.settings.name||'';
+  document.getElementById('settCurrency').value=db.settings.currency||'USD';
+  document.getElementById('settBudget').value=db.settings.budget||15000;
+  document.getElementById('settWeightUnit').value=db.settings.weightUnit||'kg';
+  document.getElementById('settingsModal').classList.add('open');
+}
+function saveSettings(){
+  db.settings.name=document.getElementById('settName').value.trim()||'Pet Owner';
+  db.settings.currency=document.getElementById('settCurrency').value;
+  db.settings.budget=parseFloat(document.getElementById('settBudget').value)||15000;
+  db.settings.weightUnit=document.getElementById('settWeightUnit').value;
+  save();closeModal('settingsModal');
+  document.getElementById('ownerNameDisplay').textContent=db.settings.name;
+  document.getElementById('dashGreetName').textContent=db.settings.name;
+  renderDashboard();
+}
+
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+document.querySelectorAll('.modal-bg').forEach(m=>m.addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal(e.currentTarget.id);}));
+
+// ══════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════
+function init(){
+  // Set default dates
+  const t=today();
+  ['vacDate','vacNext','wDate','logDate','trainDate','apptDate','expDate','remDate','galDate','docDate','docExpiry','medStart','medEnd'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=t;});
+  document.getElementById('logTime').value=new Date().toTimeString().slice(0,5);
+  document.getElementById('apptTime').value='10:00';
+  document.getElementById('remTime').value='09:00';
+  // Build pickers
+  buildCareTypeRow();
+  buildGroomEmojiPick();
+  // Render
+  renderSidebarPets();
+  renderDashboard();
+}
+init();
+
+// ── LOADING SCREEN DISMISS ──
+function dismissLoader() {
+  const ls = document.getElementById('loadingScreen');
+  if (!ls) return;
+  ls.classList.add('fade-out');
+  setTimeout(() => { ls.style.display = 'none'; }, 750);
+}
+// Wait for fonts + 2.4s minimum for the brand moment
+window.addEventListener('load', () => {
+  setTimeout(dismissLoader, 2400);
+});
+
+
+
+
+</script>
+</body>
+</html>
